@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>337635008288-11di3fvpcnnac51il6e77c8mhejdsqa6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.337635008288-11di3fvpcnnac51il6e77c8mhejdsqa6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>337635008288-5dngjvo6it8d8bb1au7hane0cq7a1ark.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyASHdDMmIPjO1TJZdW2Y0VS6MLJcAzlXzc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>337635008288</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.zenmarkx.zenmark</string>
+	<key>PROJECT_ID</key>
+	<string>hitches-mobile-app</string>
+	<key>STORAGE_BUCKET</key>
+	<string>hitches-mobile-app.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:337635008288:ios:5448e21705f55aac4a4145</string>
+</dict>
+</plist>

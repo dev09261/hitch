@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "337635008288",
+    "project_id": "hitches-mobile-app",
+    "storage_bucket": "hitches-mobile-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:337635008288:android:11cbdbe80bf2b40c4a4145",
+        "android_client_info": {
+          "package_name": "com.willparton.hitch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "337635008288-7loa46ecqm3r1bjjhtcpi6id9qfeq698.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.willparton.hitch",
+            "certificate_hash": "59481e82c9afc24917c9b96c0b1c6f6c0192f01f"
+          }
+        },
+        {
+          "client_id": "337635008288-ggvve0ks74t15k2u4lcaj1g91fnfn4e2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.willparton.hitch",
+            "certificate_hash": "799cfbd9921d0ad1f3e4b4229bfd0a3c8e2e86cc"
+          }
+        },
+        {
+          "client_id": "337635008288-5u220i4u26jsi7rhbonjoot6louo31pa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCst114Bbg3O0lycKbMGn1ysuF5JoKIxFs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "337635008288-5u220i4u26jsi7rhbonjoot6louo31pa.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "337635008288-11di3fvpcnnac51il6e77c8mhejdsqa6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.zenmarkx.zenmark"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

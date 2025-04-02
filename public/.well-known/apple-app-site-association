@@ -1,0 +1,11 @@
+{
+  "applinks": {
+      "apps": [],
+      "details": [
+      {
+        "appID": "482QRJ4E4K.com.zenmarkx.zenmark",
+        "paths": ["*", "/" ]
+      }
+    ]
+  }
+}

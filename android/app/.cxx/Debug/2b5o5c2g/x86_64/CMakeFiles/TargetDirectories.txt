@@ -1,0 +1,2 @@
+/Users/sheraz-ali/Documents/FlutterDev/hitch_project/android/app/.cxx/Debug/2b5o5c2g/x86_64/CMakeFiles/edit_cache.dir
+/Users/sheraz-ali/Documents/FlutterDev/hitch_project/android/app/.cxx/Debug/2b5o5c2g/x86_64/CMakeFiles/rebuild_cache.dir
