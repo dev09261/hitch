@@ -86,8 +86,6 @@ class _TellUsMorePageState extends State<TellUsMorePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('How do you want approved players to contact you?', style: AppTextStyles.regularTextStyle,),
-                          const SizedBox(height: 30,),
                          /* AppTextField(textEditingController: _emailController, hintText: 'Email', isReadOnly: true,),
                           const SizedBox(height: 30,),*/
                           _playerTypeCoach

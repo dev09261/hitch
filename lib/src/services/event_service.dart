@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,16 +14,19 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import '../models/user_model.dart';
 import '../utils/utils.dart';
+import 'hitches_service.dart';
 
 class EventService {
   static final _eventsRef = FirebaseFirestore.instance.collection(eventsCollection);
   static final _userColRef = FirebaseFirestore.instance.collection(userCollection);
-  static Future<void> createEvent(
+  static Future<EventModel> createEvent(
       {required String title,
       required String description,
       required String imagePath,
       required DateTime eventDate,
         required bool isForEveryOne,
+        double? lat,
+        double? lng,
       String? eventUrl}) async {
     String? imageUrl = await getProfileUrl(eventPicPath: imagePath);
 
@@ -38,11 +40,14 @@ class EventService {
         description: description,
         eventImageUrl: imageUrl!,
         isForEveryOne: isForEveryOne,
+        latitude: lat,
+        longitude: lng,
       createdByUserID: FirebaseAuth.instance.currentUser!.uid,
       eventUrl: eventUrl
     );
 
     await _eventsRef.doc(eventID).set(event.toMap());
+    return event;
 
   }
 
@@ -129,19 +134,17 @@ class EventService {
             .toList());
   }
 
-  static Future<List<Tournament>> fetchTournaments() async {
-    const String url = "https://fe-gql.pickleball.com/graphql";
+  static Future<Map<String, dynamic>> fetchTournaments(int page, int limit) async {
+   const String url = "https://fe-gql.pickleball.com/graphql";
     List<Tournament> tournaments = [];
+    bool hasMore = true;
 
-    // Get today's date in ISO format (YYYY-MM-DD)
-    // String today = DateTime.now().toIso8601String().split("T")[0];
 
     final Map<String, dynamic> body = {
       "query": """
-    query GetTournaments {
-      tournaments {
-        totalCount
-        items {
+      query {
+        tournaments(page: $page, limit: $limit) {
+          items {
           id
           title
           dateFrom
@@ -153,10 +156,11 @@ class EventService {
           registrationCount
           lat
           lng
+          }
+          totalCount
         }
       }
-    }
-    """
+      """
     };
 
     final response = await http.post(
@@ -170,8 +174,9 @@ class EventService {
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
+      // debugPrint("Data get: ${data}");
       PickleballTournamentModel pickleballTournaments = PickleballTournamentModel.fromJson(data);
-
+      hasMore = data['totalCount'] != limit;
       UserModel? currentUser = await UserAuthService.instance.getCurrentUser();
       if (currentUser != null) {
         for (var tournament in pickleballTournaments.data.tournaments.items) {
@@ -182,26 +187,78 @@ class EventService {
             double distanceInMeters = Geolocator.distanceBetween(
                 currentUser.latitude!, currentUser.longitude!, tournament.lat, tournament.lng);
 
-            tournament.distance = distanceInMeters;
-            tournaments.add(tournament);
+            if(Utils.getDistanceInMiles(distanceInMeters) <= 200){
+              tournament.distance = distanceInMeters;
+              tournaments.add(tournament);
+            }
+
           }
         }
 
         // Sort tournaments from closest to farthest
         tournaments.sort((a, b) => a.distance.compareTo(b.distance));
+        tournaments.sort((a, b)=> b.dateFrom.compareTo(a.dateFrom));
       }
     } else {
       /*print("Error: ${response.statusCode}");
       print("Response: ${response.body}");*/
     }
 
-    return tournaments;
+    return {
+      'tournaments' : tournaments,
+      'hasMore' : hasMore
+    };
   }
 
-  static Future<List<EventModel>> getLocalTournaments() async{
+  static Future<List<EventModel>> getLocalTournaments(UserModel currentUser) async {
     List<EventModel> events = [];
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection(eventsCollection).get();
+    List<String> myHitchesIds = await HitchesService.getAcceptedHitchesUserIds();
+
+    myHitchesIds.add(currentUser.userID);
+
+    QuerySnapshot querySnapshot = await FirebaseFirestore
+        .instance
+        .collection(eventsCollection)
+        .where('createdByUserID', whereIn: myHitchesIds)
+        .where('isForEveryOne', isEqualTo: false)
+        .get();
+
     events= querySnapshot.docs.map((doc)=> EventModel.fromMap(doc.data() as Map<String,dynamic>)).toList();
+
+    List<String> eventsIds = events.map((e) => e.eventID).toList();
+
+    if (currentUser.latitude != null) {
+      GeoBox box = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 500);
+      QuerySnapshot querySnapshot = await FirebaseFirestore
+          .instance
+          .collection(eventsCollection)
+          .where('latitude', isGreaterThanOrEqualTo: box.minLat)
+          .where('latitude', isLessThanOrEqualTo: box.maxLat)
+          .where('longitude', isGreaterThanOrEqualTo: box.minLng)
+          .where('longitude', isLessThanOrEqualTo: box.maxLng)
+          .where('isForEveryOne', isEqualTo: true)
+          .get();
+
+      for (var doc in querySnapshot.docs) {
+        EventModel event = EventModel.fromMap(doc.data() as Map<String,dynamic>);
+        events.add(event);
+      }
+    }
+    events.removeWhere((event)=> event.eventDate.isBefore(DateTime.now()));
+    events.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return events;
+  }
+
+  static void deleteAllEvents() async{
+   QuerySnapshot querySnapshot = await _eventsRef.get();
+   querySnapshot.docs.forEach((doc){
+     String docID = doc.id;
+      _eventsRef.doc(docID).get().then((eventDoc) async {
+       if(eventDoc.exists){
+        await eventDoc.reference.delete();
+         debugPrint("Doc $docID deleted");
+       }
+     });
+   });
   }
 }

@@ -25,7 +25,7 @@ class PickleBallTournamentItemWidget extends StatelessWidget{
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.grey, spreadRadius: 1)],
         ),
-        margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 15),
+        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

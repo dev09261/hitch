@@ -1,4 +1,4 @@
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_app_badge_control/flutter_app_badge_control.dart';
 import 'package:hitch/src/services/hitches_service.dart';
 
 class AppIconBadgerService {
@@ -12,7 +12,7 @@ class AppIconBadgerService {
 
     totalUnreadCount =  await HitchesService.getPendingAndUnReadCount();
 
-    FlutterAppBadger.updateBadgeCount(totalUnreadCount);
+    FlutterAppBadgeControl.updateBadgeCount(totalUnreadCount);
     // debugPrint("Total Unread count: $totalUnreadCount");
     return totalUnreadCount;
   }

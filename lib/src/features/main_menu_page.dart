@@ -94,7 +94,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                             isPendingRequestNotEmpty
                                 ? SvgPicture.asset(AppIcons.icHitchesGreenNotSelected, color: state.tabIndex == 3
                                 ? AppColors.primaryColor
-                                : AppColors.greyTextColor) : SvgPicture.asset(
+                                : null) : SvgPicture.asset(
                                               AppIcons.icHitchesDefault,
                                               color: state.tabIndex == 3
                                                   ? AppColors.primaryColor

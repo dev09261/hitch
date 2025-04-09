@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:purchases_flutter/purchases_flutter.dart';
 
 class SubscriptionProvider with ChangeNotifier{
-  bool _isSubscribed = false;
+  bool _isSubscribed = true;
   Map<String, EntitlementInfo>? _subscribedPackage;
 
 
@@ -10,6 +10,7 @@ class SubscriptionProvider with ChangeNotifier{
   Map<String, EntitlementInfo>? get getSubscribedPackage => _subscribedPackage;
 
   SubscriptionProvider(){
+        subscribe();
     _initializePurchases();
   }
 

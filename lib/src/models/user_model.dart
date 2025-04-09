@@ -36,40 +36,47 @@ class UserModel {
   bool isAvailableInMorning;
   String matchType;
   String genderType;
+  String? myDuprID;
+  bool isConnectedToDupr;
+  double? duprSingleRating;
+  double? duprDoubleRating;
   List<String> availableDaysToPlay;
-  UserModel({
-    required this.userID,
-    required this.userName,
-    required this.profilePicture,
-    required this.playerTypePickle,
-    required this.playerTypeTennis,
-    required this.playerTypeCoach,
-    this.level = '',
-    required this.bio,
-    required this.cellNumber,
-    required this.emailAddress,
-    this.latitude,
-    this.longitude,
-    this.gender,
-    this.distanceFromCurrentLocation = 30,
-    this.age,
-    this.token = '',
-    this.experience,
-    this.requestReceivedFromUserIDs = const [],
-    this.declinedRequestsUserIDs = const [],
-    this.requestSentToUserIDs = const [],
-    this.coachPickleBallExperienceLevel,
-    this.coachTennisBallExperienceLevel,
-    this.pickleBallPlayerLevel,
-    this.tennisBallPlayerLevel,
-    this.uploadedSportsPhotos = const [],
-    this.isAvailableDaily = true,
-    this.isAvailableInMorning = false,
-    this.matchType = 'Both',
-    this.genderType = 'Both',
-    required this.availableDaysToPlay,
-    this.isReviewed = false
-  });
+  UserModel(
+      {required this.userID,
+      required this.userName,
+      required this.profilePicture,
+      required this.playerTypePickle,
+      required this.playerTypeTennis,
+      required this.playerTypeCoach,
+      this.level = '',
+      required this.bio,
+      required this.cellNumber,
+      required this.emailAddress,
+      this.latitude,
+      this.longitude,
+      this.gender,
+      this.distanceFromCurrentLocation = 30,
+      this.age,
+      this.token = '',
+      this.experience,
+      this.requestReceivedFromUserIDs = const [],
+      this.declinedRequestsUserIDs = const [],
+      this.requestSentToUserIDs = const [],
+      this.coachPickleBallExperienceLevel,
+      this.coachTennisBallExperienceLevel,
+      this.pickleBallPlayerLevel,
+      this.tennisBallPlayerLevel,
+      this.uploadedSportsPhotos = const [],
+      this.isAvailableDaily = true,
+      this.isAvailableInMorning = false,
+      this.matchType = 'Both',
+      this.genderType = 'Both',
+      this.myDuprID,
+      this.isConnectedToDupr = false,
+      this.duprDoubleRating,
+      this.duprSingleRating,
+      required this.availableDaysToPlay,
+      this.isReviewed = false});
 
   Map<String, dynamic> toMap() {
     return {
@@ -85,71 +92,94 @@ class UserModel {
       'emailAddress': emailAddress,
       'age': age,
       'experience': experience,
-      'token' : token,
+      'token': token,
       'distanceFromCurrentLocation': distanceFromCurrentLocation,
       'requestSentToUserIDs': requestSentToUserIDs,
       'requestReceivedFromUserIDs': requestReceivedFromUserIDs,
       'declinedRequestsUserIDs': requestReceivedFromUserIDs,
       // 'languages' : languages,
       'latitude': latitude,
-      'longitude':longitude,
-      'gender' :  gender,
+      'longitude': longitude,
+      'gender': gender,
+      'myDuprID': myDuprID,
+      'isConnectedToDupr': isConnectedToDupr,
+      'duprDoubleRating': duprDoubleRating,
+      'duprSingleRating': duprSingleRating,
       'coachPickleBallExperienceLevel': coachPickleBallExperienceLevel?.toMap(),
-      'coachTennisBallExperienceLevel' : coachTennisBallExperienceLevel?.toMap(),
+      'coachTennisBallExperienceLevel': coachTennisBallExperienceLevel?.toMap(),
       'pickleBallPlayerLevel': pickleBallPlayerLevel?.toMap(),
-      'tennisBallPlayerLevel' : tennisBallPlayerLevel?.toMap(),
-      uploadedFilesKey : uploadedSportsPhotos.map((uploadedSportsPhotos)=> uploadedSportsPhotos.toMap()).toList(),
+      'tennisBallPlayerLevel': tennisBallPlayerLevel?.toMap(),
+      uploadedFilesKey: uploadedSportsPhotos
+          .map((uploadedSportsPhotos) => uploadedSportsPhotos.toMap())
+          .toList(),
       isAvailableDailyKey: isAvailableDaily,
       isAvailableInMorningKey: isAvailableInMorning,
-      matchTypeKey : matchType,
-      genderTypeKey : genderType,
-      availableDaysToPlayKey : availableDaysToPlay,
-      isReviewedKey : isReviewed
-
+      matchTypeKey: matchType,
+      genderTypeKey: genderType,
+      availableDaysToPlayKey: availableDaysToPlay,
+      isReviewedKey: isReviewed
     };
   }
 
   // Create a UserProfile object from a map
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      userID: map['userID'],
-      userName: map['userName'],
-      profilePicture: map['profilePicture'],
-      playerTypePickle: map['playerTypePickle'] ?? true,
-      playerTypeTennis: map['playerTypeTennis'] ?? true,
-      playerTypeCoach: map['playerTypeCoach'] ?? false,
-      level: map['level'],
-      bio: map['bio'],
-      cellNumber: map['cellNumber'],
-      emailAddress: map['emailAddress'],
-      age: map['age'],
-      experience: map['experience'],
-      token: map['token'] ?? '',
-      distanceFromCurrentLocation: map['distanceFromCurrentLocation'],
-      requestSentToUserIDs: List<String>.from(map['requestSentToUserIDs'] ?? []),
-        declinedRequestsUserIDs: List<String>.from(map['declinedRequestsUserIDs'] ?? []),
-      // languages: List<String>.from(map['languages'] ?? []),
-      requestReceivedFromUserIDs: List<String>.from(map['requestReceivedFromUserIDs'] ?? []),
-      latitude: map['latitude'],
-      longitude: map['longitude'],
-      gender: map['gender'],
-        coachPickleBallExperienceLevel: map['coachPickleBallExperienceLevel'] !=
-            null ? CoachExperienceModel.fromMap(
-            map['coachPickleBallExperienceLevel']) : null,
-      coachTennisBallExperienceLevel: map['coachTennisBallExperienceLevel'] != null ? CoachExperienceModel.fromMap(map['coachTennisBallExperienceLevel']) : null,
-      pickleBallPlayerLevel: map['pickleBallPlayerLevel'] != null ? PlayerLevelModel.fromMap(map['pickleBallPlayerLevel']) : null,
-      tennisBallPlayerLevel: map['tennisBallPlayerLevel'] != null ? PlayerLevelModel.fromMap(map['tennisBallPlayerLevel']) : null,
-      uploadedSportsPhotos: (map['uploadedFiles'] as List<dynamic>? ?? [])
-          .map((fileMap) => UploadedFileModel.fromMap(fileMap as Map<String, dynamic>))
-          .toList(),
-      isAvailableDaily: map[isAvailableDailyKey] ?? true,
-      isAvailableInMorning: map[isAvailableInMorningKey] ?? false,
-      matchType: map[matchTypeKey] ?? 'Both',
-      genderType: map[genderTypeKey] ?? 'Both',
-      isReviewed: map[isReviewedKey] ?? false,
-      availableDaysToPlay: List<String>.from(map[availableDaysToPlayKey] ?? [],
-      )
-    );
+        userID: map['userID'],
+        userName: map['userName'],
+        profilePicture: map['profilePicture'],
+        playerTypePickle: map['playerTypePickle'] ?? true,
+        playerTypeTennis: map['playerTypeTennis'] ?? true,
+        playerTypeCoach: map['playerTypeCoach'] ?? false,
+        level: map['level'],
+        bio: map['bio'],
+        cellNumber: map['cellNumber'],
+        emailAddress: map['emailAddress'],
+        age: map['age'],
+        experience: map['experience'],
+        token: map['token'] ?? '',
+        distanceFromCurrentLocation: map['distanceFromCurrentLocation'],
+        requestSentToUserIDs:
+            List<String>.from(map['requestSentToUserIDs'] ?? []),
+        declinedRequestsUserIDs:
+            List<String>.from(map['declinedRequestsUserIDs'] ?? []),
+        // languages: List<String>.from(map['languages'] ?? []),
+        requestReceivedFromUserIDs:
+            List<String>.from(map['requestReceivedFromUserIDs'] ?? []),
+        latitude: map['latitude'],
+        longitude: map['longitude'],
+        gender: map['gender'],
+        myDuprID: map['myDuprID'],
+        isConnectedToDupr: map['isConnectedToDupr'] ?? false,
+        duprDoubleRating: map['duprDoubleRating'],
+        duprSingleRating: map['duprSingleRating'],
+        coachPickleBallExperienceLevel:
+            map['coachPickleBallExperienceLevel'] != null
+                ? CoachExperienceModel.fromMap(
+                    map['coachPickleBallExperienceLevel'])
+                : null,
+        coachTennisBallExperienceLevel:
+            map['coachTennisBallExperienceLevel'] != null
+                ? CoachExperienceModel.fromMap(
+                    map['coachTennisBallExperienceLevel'])
+                : null,
+        pickleBallPlayerLevel: map['pickleBallPlayerLevel'] != null
+            ? PlayerLevelModel.fromMap(map['pickleBallPlayerLevel'])
+            : null,
+        tennisBallPlayerLevel: map['tennisBallPlayerLevel'] != null
+            ? PlayerLevelModel.fromMap(map['tennisBallPlayerLevel'])
+            : null,
+        uploadedSportsPhotos: (map['uploadedFiles'] as List<dynamic>? ?? [])
+            .map((fileMap) =>
+                UploadedFileModel.fromMap(fileMap as Map<String, dynamic>))
+            .toList(),
+        isAvailableDaily: map[isAvailableDailyKey] ?? true,
+        isAvailableInMorning: map[isAvailableInMorningKey] ?? false,
+        matchType: map[matchTypeKey] ?? 'Both',
+        genderType: map[genderTypeKey] ?? 'Both',
+        isReviewed: map[isReviewedKey] ?? false,
+        availableDaysToPlay: List<String>.from(
+          map[availableDaysToPlayKey] ?? [],
+        ));
   }
 
   void setUserID({required String userID}) {

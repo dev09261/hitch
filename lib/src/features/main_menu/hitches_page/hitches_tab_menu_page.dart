@@ -57,7 +57,7 @@ class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProv
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(left: 20,top: 10),
+            padding: const EdgeInsets.only(left: 10,top: 10),
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -116,14 +116,14 @@ class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProv
                 Align(
                   alignment: Alignment.topRight,
                   child: Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
+                    padding: const EdgeInsets.only(right: 0.0),
                     child: IconButton(
                         onPressed: selectedTab == 0
                             ? null
                             : ()=> Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CreateGroupChatPage())),
                         icon: Icon(
                           Icons.add,
-                          size: 35,
+                          size: 30,
                           color: selectedTab == 0
                               ? Colors.white
                               : AppColors.primaryColor,

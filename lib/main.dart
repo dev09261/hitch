@@ -12,12 +12,14 @@ import 'package:hitch/src/bloc_cubit/user_info_cubit/user_info_cubit.dart';
 import 'package:hitch/src/dynamic_link/dynamic_link_handler.dart';
 import 'package:hitch/src/features/authentication/sign_in_with_accounts_page.dart';
 import 'package:hitch/src/features/permissions_page.dart';
+import 'package:hitch/src/models/dupr_model.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
 import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/auth_service.dart';
+import 'package:hitch/src/services/dupr_service.dart';
 import 'package:hitch/src/theme/hitch_app_theme.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
 import 'package:provider/provider.dart';
@@ -98,8 +100,23 @@ class MyApp extends StatelessWidget {
       if(FirebaseAuth.instance.currentUser != null){
         UserAuthService service = UserAuthService.instance;
         UserModel? user = await service.getCurrentUser();
-
         result = user!= null;
+
+        if (user?.isConnectedToDupr ?? false) {
+          Future.microtask(() async {
+            DuprService().duprId = user!.myDuprID;
+            DuprModel dupr = await DuprService().getDupr();
+            if (dupr.status == 'success') {
+              UserAuthService.instance.updateUserInfo(updatedMap: {
+                'isConnectedToDupr' : true,
+                'myDuprID' : dupr.duprId,
+                'duprDoubleRating' : dupr.doubleRating,
+                'duprSingleRating' : dupr.singleRating,
+              });
+            }
+          });
+        }
+
       }
     }catch(e){
       debugPrint("Exception while checking if user exists: ${e.toString()}");

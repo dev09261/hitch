@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hitch/src/bloc_cubit/user_info_cubit/user_info_cubit.dart';
 import 'package:hitch/src/data/app_data.dart';
 import 'package:hitch/src/features/permissions_page.dart';
+import 'package:hitch/src/features/user_profile/connect_dupr_dialog.dart';
 import 'package:hitch/src/models/coach_experience_model.dart';
+import 'package:hitch/src/models/dupr_model.dart';
 import 'package:hitch/src/models/player_level_model.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/res/app_icons.dart';
@@ -56,6 +58,7 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
   PlayerLevelModel? _selectedTennisBallPlayerLevel;
   CoachExperienceModel? _selectedCoachPickleBallExperienceModel;
   CoachExperienceModel? _selectedCoachTennisExperienceModel;
+  DuprModel? dupr;
 
 
   late List<PlayerLevelModel> _pickleBallPlayerLevels;
@@ -180,12 +183,46 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
                                   ],
                                 ),
                               ),
-                      
+                              if (_playerTypePickleBal && dupr == null)
+                                Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: InkWell(
+                                      onTap: () async {
+                                        dupr = await showDialog<DuprModel>(
+                                          context: context,
+                                          builder: (context) =>
+                                              const ConnectDuprDialog(),
+                                        );
+
+                                        if (dupr != null) {
+                                          setState(() {
+
+                                          });
+                                        }
+                                      },
+                                      child: const Text(
+                                        "Connect My DUPR",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: AppColors.primaryDarkColor,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    )),
+
+                              if (_playerTypePickleBal && dupr != null)
+                                Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Text(
+                                      "DUPR: ${dupr!.doubleRating??0}",
+                                      style: const TextStyle(
+                                          fontSize: 16),
+                                    ),),
+
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
                                 child: Column(
                                   children: [
-                                    if(_playerTypePickleBal)
+                                    if(_playerTypePickleBal && dupr == null)
                                       PlayerLevelDropdownTextfieldWidget(
                                         isEmpty: _selectedPickleBallPlayerLevel == null,
                                         selectedValue: _selectedPickleBallPlayerLevel,
@@ -362,7 +399,11 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
       coachTennisExperienceLevelKey: _selectedCoachTennisExperienceModel,
       coachPickleBallExperienceLevelKey: _selectedCoachPickleBallExperienceModel,
       // levelKey: selectedLevel['level'],
-      userIDKey : _userID
+      userIDKey : _userID,
+      "myDuprID" : dupr?.duprId,
+      "isConnectedToDupr" : dupr != null,
+      "duprDoubleRating" : dupr?.doubleRating,
+      "duprSingleRating" : dupr?.singleRating,
     };
     Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> TellUsMorePage(userAboutInfo: userMap, isGoogleSignup: _isGoogleSignup,)));
   }

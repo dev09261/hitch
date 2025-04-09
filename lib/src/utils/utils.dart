@@ -17,6 +17,15 @@ import '../models/user_model.dart';
 import '../services/auth_service.dart';
 import '../widgets/primary_btn.dart';
 
+class GeoBox {
+  final double minLat;
+  final double maxLat;
+  final double minLng;
+  final double maxLng;
+
+  GeoBox(this.minLat, this.maxLat, this.minLng, this.maxLng);
+}
+
 class Utils {
   static Future<void> saveToCache({required String key, required String value})async{
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -252,17 +261,28 @@ class Utils {
 
   static String getPlayerLevelText(UserModel player) {
     if(player.pickleBallPlayerLevel != null && player.tennisBallPlayerLevel != null){
+      if (player.isConnectedToDupr) {
+        return '${player.duprDoubleRating} Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
+      }
       return '${player.pickleBallPlayerLevel!.levelRank} Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
     }else if(player.pickleBallPlayerLevel != null){
+      if (player.isConnectedToDupr) {
+        return '${player.duprDoubleRating} Pickleball';
+      }
       return '${player.pickleBallPlayerLevel!.levelRank} Pickleball ';
     }else if(player.tennisBallPlayerLevel != null){
       return '${player.tennisBallPlayerLevel!.levelRank} Tennis ';
     }else if(player.playerTypeCoach){
-
       return getCoachExperienceDetails(player);
     }else if(player.playerTypePickle && player.playerTypeTennis){
+      if (player.isConnectedToDupr) {
+        return '${player.duprDoubleRating} Pickleball & Tennis';
+      }
       return '${player.level} Pickleball & Tennis';
     }else if(player.playerTypePickle){
+      if (player.isConnectedToDupr) {
+        return '${player.duprDoubleRating} Pickleball';
+      }
       return '${player.level} Pickleball';
     }else if(player.playerTypeTennis){
       return '${player.level} Tennis';
@@ -346,5 +366,25 @@ class Utils {
     }
 
     return address;
+  }
+
+  static GeoBox calculateBoundingBox(double lat, double lng, double distanceInMiles) {
+    const double earthRadius = 3958.8; // Radius of Earth in miles
+    double latRadian = lat * (3.14159 / 180); // Convert to radians
+
+    // Approximate degrees per mile
+    double latDegreePerMile = 1 / 69.0; // 1 degree latitude ≈ 69 miles
+    double lngDegreePerMile =
+        1 / (69.0 * cos(latRadian)); // Adjust longitude based on latitude
+
+    double deltaLat = distanceInMiles * latDegreePerMile;
+    double deltaLng = distanceInMiles * lngDegreePerMile;
+
+    return GeoBox(
+      lat - deltaLat, // minLat
+      lat + deltaLat, // maxLat
+      lng - deltaLng, // minLng
+      lng + deltaLng, // maxLng
+    );
   }
 }

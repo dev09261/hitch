@@ -18,6 +18,7 @@ class PlayersCoachesService {
       if(user.playerTypeCoach){
        return _getPlayersOfSimilarMatchGenderType(players: players, currentUser: user);
       }
+
       players = fetchPlayersOfSimilarLevel(currentUser: user, playerList: players, isPickleball: user.playerTypePickle);
 
       return players;
@@ -45,11 +46,23 @@ class PlayersCoachesService {
     final players =  playerList.where((player){
       //Now we have to check here if player has old version or newer version
       //Current user will always have newer version we have to verify the old users
-      if(player.pickleBallPlayerLevel != null || player.tennisBallPlayerLevel != null){
+
+      if((player.playerTypePickle && player.isConnectedToDupr) || player.pickleBallPlayerLevel != null || player.tennisBallPlayerLevel != null){
         // debugPrint("New player found: ${player.userName}, and Pickle level: ${player.pickleBallPlayerLevel?.levelRank}, Tennis level: ${player.tennisBallPlayerLevel?.levelRank}");
         // It means player has newer version installed
-        bool isPickle = player.pickleBallPlayerLevel?.levelRank == currentUser.pickleBallPlayerLevel?.levelRank;
+        bool isPickle = false;
         bool isTennis =  player.tennisBallPlayerLevel?.levelRank == currentUser.tennisBallPlayerLevel?.levelRank;
+
+        if (player.playerTypePickle && player.isConnectedToDupr) {
+          if (currentUser.pickleBallPlayerLevel?.levelRank != null) {
+            double level = double.tryParse(currentUser.pickleBallPlayerLevel!.levelRank) ?? 0;
+            if (player.duprDoubleRating! >= level && player.duprDoubleRating! < level + 1) {
+              isPickle = true;
+            }
+          }
+        } else {
+          isPickle = player.pickleBallPlayerLevel?.levelRank == currentUser.pickleBallPlayerLevel?.levelRank;
+        }
 
         // debugPrint("isPickle: $isPickle , isTennis: $isTennis");
         return isPickle || isTennis;

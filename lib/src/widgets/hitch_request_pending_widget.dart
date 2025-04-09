@@ -10,7 +10,9 @@ class HitchRequestPendingWidget extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: ()=> HitchesService.onAcceptRejectHitchTap(hitchRequest: hitchRequest, hitchStatus: hitchesStateAccepted),
+        onTap: ()=> HitchesService.onAcceptRejectHitchTap(
+            context: context,
+            hitchRequest: hitchRequest, hitchStatus: hitchesStateAccepted),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           decoration: BoxDecoration(color: AppColors.primaryColorVariant1, borderRadius: BorderRadius.circular(99),),

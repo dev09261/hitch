@@ -19,6 +19,7 @@ class LargeScreenSizePlayerItemWidget  extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
+    Size size = MediaQuery.of(context).size;
     return Container(
       margin: const EdgeInsets.only(top: 10),
       child: Stack(
@@ -38,7 +39,7 @@ class LargeScreenSizePlayerItemWidget  extends StatelessWidget{
                 boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.grey, spreadRadius: 1)],
               ),
               child: Container(
-                  padding: const EdgeInsets.only(top: 65),
+                  padding:  EdgeInsets.only(top: size.height*0.08),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: const Color(0xffBFBCBC)),

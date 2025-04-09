@@ -53,8 +53,8 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
 
 
   Future<void> onLetsPlayTap(BuildContext context)async{
-    final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
 
+    final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
 
     // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
     final isSubscribed = subscriptionProvider.getIsSubscribed;

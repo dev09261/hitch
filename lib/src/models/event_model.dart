@@ -8,6 +8,8 @@ class EventModel {
   final String? eventUrl;
   final bool isForEveryOne;
   final String createdByUserID;
+  double? latitude;
+  double? longitude;
   EventModel({
     required this.eventID,
     required this.createdAt,
@@ -18,6 +20,8 @@ class EventModel {
     this.eventUrl,
     required this.isForEveryOne,
     required this.createdByUserID,
+    this.latitude,
+    this.longitude,
   });
 
   Map<String, dynamic> toMap() {
@@ -30,7 +34,9 @@ class EventModel {
       'eventImageUrl': eventImageUrl,
       'eventUrl': eventUrl,
       'isForEveryOne': isForEveryOne,
-      'createdByUserID' : createdByUserID
+      'createdByUserID' : createdByUserID,
+      'latitude': latitude,
+      'longitude':longitude,
     };
   }
 
@@ -44,7 +50,9 @@ class EventModel {
       eventImageUrl: map['eventImageUrl'] ?? '',
       eventUrl: map['eventUrl'],
       isForEveryOne: map['isForEveryOne'] ?? false,
-      createdByUserID : map['createdByUserID']
+      createdByUserID : map['createdByUserID'],
+      latitude: map['latitude'],
+      longitude: map['longitude'],
     );
   }
 }

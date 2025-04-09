@@ -74,13 +74,16 @@ dependencies:
   carousel_slider: ^5.0.0
   mailer: ^6.2.0
   firebase_dynamic_links: ^6.0.11
-  flutter_app_badger: ^1.5.0
+#  flutter_app_badger: ^1.5.0
   flutter_rating_bar: ^4.0.1
   launch_review: ^3.0.1
   google_mobile_ads: ^5.2.0
   intl:
   csv: ^6.0.0
   flutter_slidable: ^4.0.0
+#  launch_review_latest: ^1.0.0
+  flutter_app_badge_control: ^0.0.2
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:

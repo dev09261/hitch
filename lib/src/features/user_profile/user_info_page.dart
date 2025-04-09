@@ -182,9 +182,29 @@ class _UserInfoPageState extends State<UserInfoPage> {
                     Text("Loading ...", style: AppTextStyles.regularTextStyle,)
                   ],
                 );
-              }
+              } else {
+                return
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                          padding: const EdgeInsets.only(top: 50),
+                          child: AppBar(
+                            leading: IconButton(onPressed: ()async{
 
-              return const SizedBox();
+                              Navigator.of(context).pop();
+                            }, icon: const Icon(Icons.arrow_back_ios_rounded, color: AppColors.primaryColor,)),
+                            scrolledUnderElevation: 0,
+                            backgroundColor:  Colors.white,
+                          )
+                      ),
+                      const Expanded(
+                        child: Center(child: Text("This player's Hitch account no longer exists"),)
+                      )
+                    ],
+                  );
+
+              }
             }
         ),
       ),

@@ -48,6 +48,7 @@ class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
               onPressed: () async{
                 await HitchesService
                     .onAcceptRejectHitchTap(
+                  context: context,
                     hitchStatus:
                     hitchesStateAccepted,
                     hitchRequest: widget.hitchRequest);
@@ -64,7 +65,9 @@ class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
             child: ElevatedButton(onPressed: ()async{
               context.read<LoggedInUserProvider>().updateDeclinedUsers(widget.hitchRequest.user.userID);
               Navigator.of(context).pop();
-              await HitchesService.onAcceptRejectHitchTap(hitchStatus: hitchesStateDeclined, hitchRequest: widget.hitchRequest);
+              await HitchesService.onAcceptRejectHitchTap(
+                  context: context,
+                  hitchStatus: hitchesStateDeclined, hitchRequest: widget.hitchRequest);
 
             }, style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,

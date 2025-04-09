@@ -83,8 +83,10 @@ class _HitchesItemWidgetState extends State<HitchesItemWidget> with SingleTicker
                         profileUrl: imageUrl, size: 50)
                         : Row(
                       children: [
-                        const CircleAvatar(backgroundColor: AppColors.primaryColor, radius: 6,),
-                        const SizedBox(width: 8,),
+                        const Padding(
+                          padding: EdgeInsets.only(left: 8.0, right: 8),
+                          child: CircleAvatar(backgroundColor: AppColors.primaryColor, radius: 6,),
+                        ),
                         HitchProfileImage(profileUrl: imageUrl, size: 50)
                       ],
                     ),

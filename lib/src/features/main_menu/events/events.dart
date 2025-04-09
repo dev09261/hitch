@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 import 'package:hitch/src/features/main_menu/events/add_event_page.dart';
 import 'package:hitch/src/features/main_menu/events/event_item_widget.dart';
-import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
 import 'package:hitch/src/models/event_model.dart';
 import 'package:hitch/src/models/pickleball_tournament_model.dart';
+import 'package:hitch/src/providers/logged_in_user_provider.dart';
 import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/services/auth_service.dart';
 import 'package:hitch/src/services/event_service.dart';
@@ -13,6 +14,7 @@ import '../../../models/user_model.dart';
 import '../../../res/app_colors.dart';
 import '../../../res/app_text_styles.dart';
 import '../../../widgets/hitch_profile_image.dart';
+import '../../paywalls/filter_subscription_paywall.dart';
 import '../../user_profile/user_profile.dart';
 import 'pickleball_tournament_widget.dart';
 
@@ -27,11 +29,17 @@ class _EventsPageState extends State<EventsPage> {
   List<Tournament> pickleBallTournaments = [];
   List<EventModel> _localEvents = [];
   bool _loadingTournaments = false;
+  final ScrollController _scrollController = ScrollController();
+  int page =1;
+  int limit = 50;
+  bool hasMore = true;
+
   @override
   void initState() {
     super.initState();
     _initLocalTournaments();
-    _initPickleBallTournaments();
+    _fetchPickleBallTournaments();
+    _scrollController.addListener(_scrollListener);
   }
   @override
   Widget build(BuildContext context) {
@@ -65,9 +73,13 @@ class _EventsPageState extends State<EventsPage> {
               Padding(
                 padding: const EdgeInsets.only(right: 8.0),
                 child: IconButton(
-                    onPressed: (){
+                    onPressed: ()async{
                       if(isSubscribed){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const AddEventPage()));
+                        EventModel? event = await Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const AddEventPage()));
+                        if(event != null){
+                          _localEvents.insert(0,event);
+                          setState(() {});
+                        }
                       }else{
                         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const FilterSubscriptionPaywall()));
                       }
@@ -81,21 +93,32 @@ class _EventsPageState extends State<EventsPage> {
             ],
           ),
           const SizedBox(height: 10,),
-          _loadingTournaments ? const Expanded(child:  LoadingWidget()) : _buildListView(),
+          _loadingTournaments && page == 1
+              ? const Expanded(child: LoadingWidget())
+              : _buildListView(),
         ],
       ),
     );
   }
 
-  void _initPickleBallTournaments()async {
+  void _fetchPickleBallTournaments()async {
     setState(()=>  _loadingTournaments = true);
-   pickleBallTournaments = await EventService.fetchTournaments();
+   Map<String, dynamic> tournamentMap = await EventService.fetchTournaments(page, limit);
+    pickleBallTournaments.addAll(tournamentMap['tournaments']);
+    hasMore = tournamentMap['hasMore'];
+    page++;
+    // await EventService.fetchTournamentIDs();
     _loadingTournaments = false;
    setState(() {});
+
+    if (pickleBallTournaments.length < 2 && hasMore) {
+      _fetchPickleBallTournaments();
+    }
   }
 
   void _initLocalTournaments()async {
-    List<EventModel> localEventsList = await EventService.getLocalTournaments();
+    var currentUser = Provider.of<LoggedInUserProvider>(context, listen: false).getUser;
+    List<EventModel> localEventsList = await EventService.getLocalTournaments(currentUser);
     if(localEventsList.isNotEmpty){
       _localEvents = localEventsList;
       setState(() {});
@@ -103,10 +126,38 @@ class _EventsPageState extends State<EventsPage> {
   }
 
   Widget _buildListView() {
-    List<dynamic> combinedList = [...pickleBallTournaments, ..._localEvents];
+    List<dynamic> combinedList = [..._localEvents, ...pickleBallTournaments];
+    if(combinedList.length < 3){
+      combinedList.sort((a, b) {
+        DateTime dateA;
+        DateTime dateB;
+
+        if (a is Tournament) {
+          dateA = a.dateFrom;
+        } else if (a is EventModel) {
+          dateA = a.eventDate;
+        } else {
+          return 0; // Fallback, in case of unexpected type
+        }
+
+        if (b is Tournament) {
+          dateB = b.dateFrom;
+        } else if (b is EventModel) {
+          dateB = b.eventDate;
+        } else {
+          return 0;
+        }
+
+        return dateB.compareTo(dateA);
+      });
+    }
     return Expanded(child: ListView.builder(
-        itemCount: combinedList.length,
+      controller: _scrollController,
+        itemCount: combinedList.length + (hasMore ? 1 : 0),
         itemBuilder: (ctx, index){
+          if (index == combinedList.length) {
+            return const LoadingWidget();
+          }
           final item = combinedList[index];
           if(item is Tournament){
             Tournament tournament = item;
@@ -115,5 +166,11 @@ class _EventsPageState extends State<EventsPage> {
             return EventItemWidget(event: item);
           }
         }));
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100 && !_loadingTournaments) {
+      _fetchPickleBallTournaments();
+    }
   }
 }

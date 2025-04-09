@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hitch/src/models/event_model.dart';
+import 'package:hitch/src/providers/logged_in_user_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/event_service.dart';
 import 'package:hitch/src/widgets/app_textfield.dart';
 import 'package:hitch/src/widgets/hitch_checkbox.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import '../../../res/app_colors.dart';
 import '../../../res/app_icons.dart';
 import '../../../res/app_text_styles.dart';
@@ -175,14 +178,18 @@ class _AddEventPageState extends State<AddEventPage> {
     String description = _descriptionController.text.trim();
 
     try{
-     await EventService.createEvent(title: title,
+     var currentUser = Provider.of<LoggedInUserProvider>(context, listen: false).getUser;
+
+     EventModel event = await EventService.createEvent(title: title,
           description: description,
           imagePath: _userUploadedEventImg!.path,
           eventDate: eventDate!,
           eventUrl: _eventUrlController.text.trim().isEmpty ? null : _eventUrlController.text.trim(),
+         lat: currentUser.latitude,
+         lng: currentUser.longitude,
           isForEveryOne: selectedEvent == eventTypeEveryone);
      Utils.showCopyToastMessage(message: 'Event created successfully');
-     _onPopup();
+     _onPopup(event);
     }catch(e){
       debugPrint("Could not create event: ${e.toString()}");
     }
@@ -191,7 +198,7 @@ class _AddEventPageState extends State<AddEventPage> {
     setState(()=>  _creatingEvent = false);
   }
 
-  void _onPopup() {
-    Navigator.of(context).pop();
+  void _onPopup(EventModel event) {
+    Navigator.of(context).pop(event);
   }
 }

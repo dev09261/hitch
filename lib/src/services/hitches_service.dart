@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hitch/src/notifications/notification_service.dart';
+import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/chat_service.dart';
 import 'package:hitch/src/utils/utils.dart';
@@ -52,7 +54,8 @@ class HitchesService{
 
   }
 
-  static Future<void> onAcceptRejectHitchTap({required HitchesModel hitchRequest, required String hitchStatus})async{
+  static Future<void> onAcceptRejectHitchTap({required BuildContext context, required HitchesModel hitchRequest, required String hitchStatus})async{
+   context.read<HitchesProvider>().addUserToHitch(hitchRequest.user.userID);
     String currentUID = FirebaseAuth.instance.currentUser!.uid;
     //Update both database sender and receiver
     await FirebaseFirestore.instance

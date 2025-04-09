@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_app_badge_control/flutter_app_badge_control.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hitch/src/features/main_menu_page.dart';
@@ -135,7 +135,7 @@ class _PermissionsPageState extends State<PermissionsPage> {
   initPlatformState() async {
     String appBadgeSupported;
     try {
-      bool res = await FlutterAppBadger.isAppBadgeSupported();
+      bool res = await FlutterAppBadgeControl.isAppBadgeSupported();
       if (res) {
         appBadgeSupported = 'Supported';
         AppIconBadgerService.updateAppIconBadge();
