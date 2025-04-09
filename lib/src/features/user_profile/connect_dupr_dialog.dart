@@ -13,7 +13,7 @@ class ConnectDuprDialog extends StatefulWidget {
 }
 
 class _ConnectDuprDialogState extends State<ConnectDuprDialog> {
-  final _emailController = TextEditingController(text: 'felixkiner@gmail.com');
+  final _emailController = TextEditingController();
   bool _isLoading = false;
   @override
   void dispose() {

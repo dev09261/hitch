@@ -146,26 +146,47 @@ class _FilterPageState extends State<FilterPage> {
                           const Text("Pickleball (DUPR)", style: TextStyle(fontSize: 21, fontWeight: FontWeight.w500, color: AppColors.primaryDarkColor),),
                           const SizedBox(height: 10,),
                           Column(
-                            children: _pickleBallLevelList.map((level) => Column(
-                              children: [
-                                InkWell(
-                                  onTap: ()=> setState(()=> _selectedPickleBallPlayerLevel = level),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 4.0),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text('${level.levelRank} - ${level.levelTitle.split(' ').first}', style: AppTextStyles.regularTextStyle.copyWith(color: const Color(0xff595959)),),
-                                        if(_selectedPickleBallPlayerLevel == level)
-                                          const Icon(Icons.done,)
-                                      ],
+                            children: _pickleBallLevelList.map((level) {
+
+                              String levelLabel = level.levelRank;
+
+                              if (levelLabel == '2.0') {
+                                levelLabel = '0.0 ~ 2.99';
+                              } else if (levelLabel == '3.0') {
+                                levelLabel = '3.0 ~ 3.99';
+                              } else if (levelLabel == '4.0') {
+                                levelLabel = '4.0 ~ 4.99';
+                              } else if (levelLabel == '5.0') {
+                                levelLabel = '5.0 ~ 5.99';
+                              } else if (levelLabel == '6.0') {
+                                levelLabel = '6.0 ~ 6.99';
+                              } else if (levelLabel == '7.0') {
+                                levelLabel = '7.0 ~ 7.99';
+                              } else if (levelLabel == '8.0') {
+                                levelLabel = '8.0 ~ ';
+                              }
+
+                              return Column(
+                                children: [
+                                  InkWell(
+                                    onTap: ()=> setState(()=> _selectedPickleBallPlayerLevel = level),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text('$levelLabel - ${level.levelTitle.split(' ').first}', style: AppTextStyles.regularTextStyle.copyWith(color: const Color(0xff595959)),),
+                                          if(_selectedPickleBallPlayerLevel == level)
+                                            const Icon(Icons.done,)
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                                if(level != _pickleBallLevelList[_pickleBallLevelList.length-1])
-                                  const Divider(),
-                              ],
-                            )).toList(),
+                                  if(level != _pickleBallLevelList[_pickleBallLevelList.length-1])
+                                    const Divider(),
+                                ],
+                              );
+                            }).toList(),
                           ),
                           const SizedBox(height: 30,)
                         ],

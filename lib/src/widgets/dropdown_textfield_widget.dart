@@ -44,13 +44,32 @@ class PlayerLevelDropdownTextfieldWidget extends StatelessWidget{
               },*/
               onChanged: onChanged,
               items: playerLevels.map((PlayerLevelModel value) {
+
+                String levelLabel = value.levelRank;
+
+                if (levelLabel == '2.0') {
+                  levelLabel = '0.0 ~ 2.99';
+                } else if (levelLabel == '3.0') {
+                  levelLabel = '3.0 ~ 3.99';
+                } else if (levelLabel == '4.0') {
+                  levelLabel = '4.0 ~ 4.99';
+                } else if (levelLabel == '5.0') {
+                  levelLabel = '5.0 ~ 5.99';
+                } else if (levelLabel == '6.0') {
+                  levelLabel = '6.0 ~ 6.99';
+                } else if (levelLabel == '7.0') {
+                  levelLabel = '7.0 ~ 7.99';
+                } else if (levelLabel == '8.0') {
+                  levelLabel = '8.0 ~ ';
+                }
+
                 return DropdownMenuItem<PlayerLevelModel>(
                   value: value,
                   child: SizedBox(
                     width: width,
                     child: Row(
                       children: [
-                        Text(value.levelRank),
+                        Text(levelLabel),
                         const SizedBox(width: 20,),
                         Expanded(child: Text(value.levelTitle),),
                       ],

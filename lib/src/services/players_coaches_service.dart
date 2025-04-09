@@ -56,6 +56,9 @@ class PlayersCoachesService {
         if (player.playerTypePickle && player.isConnectedToDupr) {
           if (currentUser.pickleBallPlayerLevel?.levelRank != null) {
             double level = double.tryParse(currentUser.pickleBallPlayerLevel!.levelRank) ?? 0;
+            if (level == 2.0 && player.duprDoubleRating! < 3) {
+              isPickle = true;
+            }
             if (player.duprDoubleRating! >= level && player.duprDoubleRating! < level + 1) {
               isPickle = true;
             }
@@ -63,7 +66,6 @@ class PlayersCoachesService {
         } else {
           isPickle = player.pickleBallPlayerLevel?.levelRank == currentUser.pickleBallPlayerLevel?.levelRank;
         }
-
         // debugPrint("isPickle: $isPickle , isTennis: $isTennis");
         return isPickle || isTennis;
       }else {

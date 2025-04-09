@@ -260,16 +260,39 @@ class Utils {
   }
 
   static String getPlayerLevelText(UserModel player) {
+
+    String pickLevelLabel = "";
+    if (player.pickleBallPlayerLevel != null) {
+      pickLevelLabel = player.pickleBallPlayerLevel!.levelRank;
+
+      if (pickLevelLabel == '2.0') {
+        pickLevelLabel = '0.0 ~ 2.99';
+      } else if (pickLevelLabel == '3.0') {
+        pickLevelLabel = '3.0 ~ 3.99';
+      } else if (pickLevelLabel == '4.0') {
+        pickLevelLabel = '4.0 ~ 4.99';
+      } else if (pickLevelLabel == '5.0') {
+        pickLevelLabel = '5.0 ~ 5.99';
+      } else if (pickLevelLabel == '6.0') {
+        pickLevelLabel = '6.0 ~ 6.99';
+      } else if (pickLevelLabel == '7.0') {
+        pickLevelLabel = '7.0 ~ 7.99';
+      } else if (pickLevelLabel == '8.0') {
+        pickLevelLabel = '8.0 ~ ';
+      }
+      
+    }
+
     if(player.pickleBallPlayerLevel != null && player.tennisBallPlayerLevel != null){
       if (player.isConnectedToDupr) {
         return '${player.duprDoubleRating} Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
       }
-      return '${player.pickleBallPlayerLevel!.levelRank} Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
+      return '$pickLevelLabel Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
     }else if(player.pickleBallPlayerLevel != null){
       if (player.isConnectedToDupr) {
         return '${player.duprDoubleRating} Pickleball';
       }
-      return '${player.pickleBallPlayerLevel!.levelRank} Pickleball ';
+      return '$pickLevelLabel Pickleball ';
     }else if(player.tennisBallPlayerLevel != null){
       return '${player.tennisBallPlayerLevel!.levelRank} Tennis ';
     }else if(player.playerTypeCoach){
