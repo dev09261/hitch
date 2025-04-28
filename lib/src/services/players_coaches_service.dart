@@ -1,14 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hitch/src/models/user_model.dart';
+import 'package:hitch/src/utils/utils.dart';
 
 class PlayersCoachesService {
   final CollectionReference _usersCollection = FirebaseFirestore.instance.collection('users');
 
   Stream<List<UserModel>> getPlayers({required UserModel user,}) {
-
-    return _usersCollection.where('userID', isNotEqualTo: user.userID).snapshots().map((snapshot) {
-
+    GeoBox box = Utils.calculateBoundingBox(
+        user.latitude!, user.longitude!, user.distanceFromCurrentLocation);
+    return _usersCollection.where('userID', isNotEqualTo: user.userID)
+        .where('latitude', isGreaterThanOrEqualTo: box.minLat)
+        .where('latitude', isLessThanOrEqualTo: box.maxLat)
+        .where('longitude', isGreaterThanOrEqualTo: box.minLng)
+        .where('longitude', isLessThanOrEqualTo: box.maxLng)
+        .snapshots().map((snapshot) {
       List<UserModel> players =  snapshot.docs.map((doc) {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
         UserModel user =  UserModel.fromMap(data);
@@ -47,7 +53,9 @@ class PlayersCoachesService {
       //Now we have to check here if player has old version or newer version
       //Current user will always have newer version we have to verify the old users
 
-      if((player.playerTypePickle && player.isConnectedToDupr) || player.pickleBallPlayerLevel != null || player.tennisBallPlayerLevel != null){
+      if((player.playerTypePickle && player.isConnectedToDupr)
+          || (player.pickleBallPlayerLevel != null && player.playerTypePickle)
+          || (player.tennisBallPlayerLevel != null && player.playerTypeTennis)){
         // debugPrint("New player found: ${player.userName}, and Pickle level: ${player.pickleBallPlayerLevel?.levelRank}, Tennis level: ${player.tennisBallPlayerLevel?.levelRank}");
         // It means player has newer version installed
         bool isPickle = false;
@@ -67,6 +75,14 @@ class PlayersCoachesService {
           isPickle = player.pickleBallPlayerLevel?.levelRank == currentUser.pickleBallPlayerLevel?.levelRank;
         }
         // debugPrint("isPickle: $isPickle , isTennis: $isTennis");
+        if (!player.playerTypePickle || !currentUser.playerTypePickle) {
+          isPickle = false;
+        }
+
+        if (!player.playerTypeTennis || !currentUser.playerTypeTennis) {
+          isTennis = false;
+        }
+
         return isPickle || isTennis;
       }else {
         // debugPrint("Old player found: ${player.userName}, and level: ${player.level}");

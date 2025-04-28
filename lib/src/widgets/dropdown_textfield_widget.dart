@@ -48,19 +48,19 @@ class PlayerLevelDropdownTextfieldWidget extends StatelessWidget{
                 String levelLabel = value.levelRank;
 
                 if (levelLabel == '2.0') {
-                  levelLabel = '0.0 ~ 2.99';
+                  levelLabel = '0.0 - 2.99';
                 } else if (levelLabel == '3.0') {
-                  levelLabel = '3.0 ~ 3.99';
+                  levelLabel = '3.0 - 3.99';
                 } else if (levelLabel == '4.0') {
-                  levelLabel = '4.0 ~ 4.99';
+                  levelLabel = '4.0 - 4.99';
                 } else if (levelLabel == '5.0') {
-                  levelLabel = '5.0 ~ 5.99';
+                  levelLabel = '5.0 - 5.99';
                 } else if (levelLabel == '6.0') {
-                  levelLabel = '6.0 ~ 6.99';
+                  levelLabel = '6.0 - 6.99';
                 } else if (levelLabel == '7.0') {
-                  levelLabel = '7.0 ~ 7.99';
+                  levelLabel = '7.0 - 7.99';
                 } else if (levelLabel == '8.0') {
-                  levelLabel = '8.0 ~ ';
+                  levelLabel = '8.0 - ';
                 }
 
                 return DropdownMenuItem<PlayerLevelModel>(

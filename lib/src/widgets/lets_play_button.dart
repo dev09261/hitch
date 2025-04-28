@@ -60,13 +60,15 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
     final isSubscribed = subscriptionProvider.getIsSubscribed;
 
     if(!isSubscribed){
-      // TODO: Display an Interstitial Ad
-      if (_interstitialAd != null ) {
-        _interstitialAd?.show();
-      } else {
+      int _hitcherCount = await HitchesService.getAllHitchesCount();
+      if (_hitcherCount >= 5) {
         Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+        return;
       }
-      return;
+
+      if (_interstitialAd != null) {
+        await _interstitialAd!.show();
+      }
     }
 
     _sendPlayRequest();

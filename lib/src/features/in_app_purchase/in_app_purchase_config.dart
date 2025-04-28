@@ -84,12 +84,12 @@ class InAppPurchaseConfig {
 
   static Future<List<Package>> getSubscriptionPackages()async {
     Offerings offerings = await Purchases.getOfferings();
-    Offering susbscriptionOffering = offerings.all['hitch_premium_subscriptions']!;
+    Offering susbscriptionOffering = Platform.isAndroid?
+    offerings.all['android']!:offerings.all['default']!;
 
     List<Package> packages = susbscriptionOffering.availablePackages;
     List<Package> mutablePackages = List.of(packages); // Creates a mutable copy
 
-// Swap elements
     if (mutablePackages.length >= 2) {
       var temp = mutablePackages[0];
       mutablePackages[0] = mutablePackages[1];

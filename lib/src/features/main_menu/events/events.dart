@@ -101,7 +101,7 @@ class _EventsPageState extends State<EventsPage> {
     );
   }
 
-  void _fetchPickleBallTournaments()async {
+  _fetchPickleBallTournaments()async {
     setState(()=>  _loadingTournaments = true);
    Map<String, dynamic> tournamentMap = await EventService.fetchTournaments(page, limit);
     pickleBallTournaments.addAll(tournamentMap['tournaments']);
@@ -116,7 +116,7 @@ class _EventsPageState extends State<EventsPage> {
     }
   }
 
-  void _initLocalTournaments()async {
+  _initLocalTournaments()async {
     var currentUser = Provider.of<LoggedInUserProvider>(context, listen: false).getUser;
     List<EventModel> localEventsList = await EventService.getLocalTournaments(currentUser);
     if(localEventsList.isNotEmpty){
@@ -127,8 +127,8 @@ class _EventsPageState extends State<EventsPage> {
 
   Widget _buildListView() {
     List<dynamic> combinedList = [..._localEvents, ...pickleBallTournaments];
-    if(combinedList.length < 3){
-      combinedList.sort((a, b) {
+    if(combinedList.length > 1){
+      combinedList.sort((b, a) {
         DateTime dateA;
         DateTime dateB;
 

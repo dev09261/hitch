@@ -61,6 +61,7 @@ const groupChatsCollection = 'group_chats';
 const messagesCollection = 'messages';
 const eventsCollection = 'localEvents';
 const sponsoredCollection = 'sponsored';
+const promoCollection = 'promo_codes';
 
 String photosPermissionDescription ='Photo access denied. Please enable it in the app settings to upload profile picture';
 String locationPermissionDescription = 'Location access denied. Please enable it in the app settings to find players and courts nearby';

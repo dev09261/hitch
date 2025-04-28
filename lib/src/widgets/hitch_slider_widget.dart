@@ -48,8 +48,8 @@ class _HitchSliderWidgetState extends State<HitchSliderWidget> {
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 0.0),
             ),
             child: Slider(
-              min: 10.0,
-              max: 30.0,
+              min: 5.0,
+              max: 20.0,
               value: _currentValue,
               onChanged: (value) {
                 widget.onChange(value);
@@ -65,9 +65,9 @@ class _HitchSliderWidgetState extends State<HitchSliderWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
+            Text("5 miles", style: AppTextStyles.regularTextStyle.copyWith(fontSize: 14),),
             Text("10 miles", style: AppTextStyles.regularTextStyle.copyWith(fontSize: 14),),
-            Text("20 miles", style: AppTextStyles.regularTextStyle.copyWith(fontSize: 14),),
-            Text("30 miles", style: AppTextStyles.regularTextStyle.copyWith(fontSize: 14),)
+            Text("20 miles", style: AppTextStyles.regularTextStyle.copyWith(fontSize: 14),)
           ],
         ),
 

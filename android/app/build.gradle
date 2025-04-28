@@ -53,17 +53,30 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 47
-        versionName "2.1.17"
+        versionCode 53
+        versionName "2.2.4"
         multiDexEnabled true
         manifestPlaceholders += [appAuthRedirectScheme: "com.willparton.hitch"]
 
     }
 
+    signingConfigs {
+        release {
+            storeFile file("upload-keystore.jks")
+            storePassword "upload"
+            keyAlias "upload"
+            keyPassword "upload"
+        }
+    }
+
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            signingConfig signingConfigs.release
+            ndk {
+                abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
+            }
+        }
+        debug {
             signingConfig signingConfigs.debug
         }
     }

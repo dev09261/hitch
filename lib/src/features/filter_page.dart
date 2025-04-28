@@ -24,7 +24,7 @@ class FilterPage extends StatefulWidget{
 }
 
 class _FilterPageState extends State<FilterPage> {
-  double _distanceFromCurrentLocation = 20;
+  double _distanceFromCurrentLocation = 10;
   late UserModel user;
   bool _filterTypePickleBall = false;
   bool _filterTypeTennisBall = false;
@@ -63,7 +63,8 @@ class _FilterPageState extends State<FilterPage> {
 
   @override
   Widget build(BuildContext context) {
-    bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
+    bool isSubscribed = true;
+    // bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
 
     return isSubscribed ? PopScope(
       canPop: _canPop,
@@ -151,19 +152,19 @@ class _FilterPageState extends State<FilterPage> {
                               String levelLabel = level.levelRank;
 
                               if (levelLabel == '2.0') {
-                                levelLabel = '0.0 ~ 2.99';
+                                levelLabel = '0.0 - 2.99';
                               } else if (levelLabel == '3.0') {
-                                levelLabel = '3.0 ~ 3.99';
+                                levelLabel = '3.0 - 3.99';
                               } else if (levelLabel == '4.0') {
-                                levelLabel = '4.0 ~ 4.99';
+                                levelLabel = '4.0 - 4.99';
                               } else if (levelLabel == '5.0') {
-                                levelLabel = '5.0 ~ 5.99';
+                                levelLabel = '5.0 - 5.99';
                               } else if (levelLabel == '6.0') {
-                                levelLabel = '6.0 ~ 6.99';
+                                levelLabel = '6.0 - 6.99';
                               } else if (levelLabel == '7.0') {
-                                levelLabel = '7.0 ~ 7.99';
+                                levelLabel = '7.0 - 7.99';
                               } else if (levelLabel == '8.0') {
-                                levelLabel = '8.0 ~ ';
+                                levelLabel = '8.0 - ';
                               }
 
                               return Column(
@@ -175,7 +176,7 @@ class _FilterPageState extends State<FilterPage> {
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text('$levelLabel - ${level.levelTitle.split(' ').first}', style: AppTextStyles.regularTextStyle.copyWith(color: const Color(0xff595959)),),
+                                          Text('$levelLabel ${level.levelTitle.split(' ').first}', style: AppTextStyles.regularTextStyle.copyWith(color: const Color(0xff595959)),),
                                           if(_selectedPickleBallPlayerLevel == level)
                                             const Icon(Icons.done,)
                                         ],

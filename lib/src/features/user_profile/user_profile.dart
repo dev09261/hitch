@@ -11,6 +11,7 @@ import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/res/app_text_styles.dart';
 import 'package:hitch/src/services/auth_service.dart';
 import 'package:hitch/src/services/dupr_service.dart';
+import 'package:hitch/src/utils/utils.dart';
 import 'package:hitch/src/widgets/app_textfield.dart';
 import 'package:hitch/src/widgets/availability_switch.dart';
 import 'package:hitch/src/widgets/coach_experience_dropdown_textfield_widget.dart';
@@ -716,6 +717,10 @@ class _UserProfileState extends State<UserProfile> {
 
         await userAuthService
             .updateUserInfo(updatedMap: {uploadedFilesKey: uploadedFilesMap});
+      }
+
+      if (playerTypePickleBal && dupr != null) {
+        _selectedPickleBallPlayerLevel = Utils.getPickleBallTypeFromDupr(dupr!);
       }
 
       List<String> updatedDays = daysAvailable

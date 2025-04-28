@@ -160,6 +160,15 @@ class HitchesService{
     }).toList();
   }
 
+  static Future<int> getAllHitchesCount() async {
+    QuerySnapshot querySnapshot = await  FirebaseFirestore.instance
+        .collection(userCollection)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(hitchesCollection)
+        .get();
+
+    return querySnapshot.docs.length;
+  }
 
   static Future<int> getPendingAndUnReadCount()async {
     int total = 0;

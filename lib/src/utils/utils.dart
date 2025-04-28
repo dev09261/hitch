@@ -6,7 +6,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:hitch/src/data/app_data.dart';
+import 'package:hitch/src/models/dupr_model.dart';
 import 'package:hitch/src/models/permission_accepted_rejected_model.dart';
+import 'package:hitch/src/models/player_level_model.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/res/app_text_styles.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -266,49 +269,49 @@ class Utils {
       pickLevelLabel = player.pickleBallPlayerLevel!.levelRank;
 
       if (pickLevelLabel == '2.0') {
-        pickLevelLabel = '0.0 ~ 2.99';
+        pickLevelLabel = '0.0 - 2.99';
       } else if (pickLevelLabel == '3.0') {
-        pickLevelLabel = '3.0 ~ 3.99';
+        pickLevelLabel = '3.0 - 3.99';
       } else if (pickLevelLabel == '4.0') {
-        pickLevelLabel = '4.0 ~ 4.99';
+        pickLevelLabel = '4.0 - 4.99';
       } else if (pickLevelLabel == '5.0') {
-        pickLevelLabel = '5.0 ~ 5.99';
+        pickLevelLabel = '5.0 - 5.99';
       } else if (pickLevelLabel == '6.0') {
-        pickLevelLabel = '6.0 ~ 6.99';
+        pickLevelLabel = '6.0 - 6.99';
       } else if (pickLevelLabel == '7.0') {
-        pickLevelLabel = '7.0 ~ 7.99';
+        pickLevelLabel = '7.0 - 7.99';
       } else if (pickLevelLabel == '8.0') {
-        pickLevelLabel = '8.0 ~ ';
+        pickLevelLabel = '8.0 - ';
       }
       
     }
 
     if(player.pickleBallPlayerLevel != null && player.tennisBallPlayerLevel != null){
       if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
+        return '${player.duprDoubleRating} DUPR & ${player.tennisBallPlayerLevel!.levelRank} UTR';
       }
-      return '$pickLevelLabel Pickleball & ${player.tennisBallPlayerLevel!.levelRank} Tennis';
+      return '$pickLevelLabel Pickleball & ${player.tennisBallPlayerLevel!.levelRank} UTR';
     }else if(player.pickleBallPlayerLevel != null){
       if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} Pickleball';
+        return '${player.duprDoubleRating} DUPR';
       }
-      return '$pickLevelLabel Pickleball ';
+      return '$pickLevelLabel Pickleball';
     }else if(player.tennisBallPlayerLevel != null){
-      return '${player.tennisBallPlayerLevel!.levelRank} Tennis ';
+      return '${player.tennisBallPlayerLevel!.levelRank} UTR ';
     }else if(player.playerTypeCoach){
       return getCoachExperienceDetails(player);
     }else if(player.playerTypePickle && player.playerTypeTennis){
       if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} Pickleball & Tennis';
+        return '${player.duprDoubleRating} DUPR & UTR';
       }
-      return '${player.level} Pickleball & Tennis';
+      return '${player.level} DUPR & UTR';
     }else if(player.playerTypePickle){
       if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} Pickleball';
+        return '${player.duprDoubleRating} DUPR';
       }
       return '${player.level} Pickleball';
     }else if(player.playerTypeTennis){
-      return '${player.level} Tennis';
+      return '${player.level} UTR';
     }
     return player.level;
   }
@@ -389,6 +392,24 @@ class Utils {
     }
 
     return address;
+  }
+
+  static PlayerLevelModel getPickleBallTypeFromDupr(DuprModel dupr) {
+    if (dupr.doubleRating! < 3) {
+      return AppData.getPickleBallPlayerLevels[0];
+    } else if (dupr.doubleRating! >= 3 && dupr.doubleRating! < 4) {
+      return AppData.getPickleBallPlayerLevels[1];
+    } else if (dupr.doubleRating! >= 4 && dupr.doubleRating! < 5) {
+      return AppData.getPickleBallPlayerLevels[2];
+    } else if (dupr.doubleRating! >= 5 && dupr.doubleRating! < 6) {
+      return AppData.getPickleBallPlayerLevels[3];
+    } else if (dupr.doubleRating! >= 6 && dupr.doubleRating! < 7) {
+      return AppData.getPickleBallPlayerLevels[4];
+    } else if (dupr.doubleRating! >= 7 && dupr.doubleRating! < 8) {
+      return AppData.getPickleBallPlayerLevels[5];
+    } else {
+      return AppData.getPickleBallPlayerLevels[6];
+    }
   }
 
   static GeoBox calculateBoundingBox(double lat, double lng, double distanceInMiles) {

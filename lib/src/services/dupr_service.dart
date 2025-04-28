@@ -13,7 +13,7 @@ class DuprService {
   static final String _clientId = dotenv.env['DURP_CLIENT_ID']!;
   static final String _clientKey = dotenv.env['DURP_CLIENT_KEY']!;
   static final String _secretKey = dotenv.env['DURP_SECRET_KEY']!;
-  static const String _baseUrl = "https://uat.mydupr.com/api/v1.0";
+  static const String _baseUrl = "https://prod.mydupr.com/api/v1.0";
   final _dio = Dio();
   late String _bearerToken;
   String? duprId;
@@ -74,7 +74,7 @@ class DuprService {
 
   Future<String> _getBearerToken() async {
     try {
-      var response = await _dio.post("https://uat.mydupr.com/api/auth/v1.0/token",
+      var response = await _dio.post("https://prod.mydupr.com/api/auth/v1.0/token",
           options: Options(
               headers: {
                 'x-authorization': _xAuth(),

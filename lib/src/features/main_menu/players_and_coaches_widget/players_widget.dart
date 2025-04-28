@@ -75,13 +75,10 @@ class _PlayersWidgetState extends State<PlayersWidget> {
                       double endLongitude = player.longitude ?? 0;
                       double distanceInMeters = Geolocator.distanceBetween(startLatitude, startLongitude, endLatitude, endLongitude);
                       double distanceInMiles = Utils.getDistanceInMiles(distanceInMeters);
-
-                      if(distanceInMiles <= currentUser.distanceFromCurrentLocation){
-                        playersMap.add({
-                          playerKey: player,
-                          distanceKey: distanceInMiles,
-                        });
-                      }
+                      playersMap.add({
+                        playerKey: player,
+                        distanceKey: distanceInMiles,
+                      });
                     }
                     playersMap.sort((a, b) => a[distanceKey].compareTo(b[distanceKey]));
                   }

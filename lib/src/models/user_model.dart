@@ -55,7 +55,7 @@ class UserModel {
       this.latitude,
       this.longitude,
       this.gender,
-      this.distanceFromCurrentLocation = 30,
+      this.distanceFromCurrentLocation = 10,
       this.age,
       this.token = '',
       this.experience,
@@ -137,7 +137,7 @@ class UserModel {
         age: map['age'],
         experience: map['experience'],
         token: map['token'] ?? '',
-        distanceFromCurrentLocation: map['distanceFromCurrentLocation'],
+        distanceFromCurrentLocation: map['distanceFromCurrentLocation'] > 20 ? 20:map['distanceFromCurrentLocation'],
         requestSentToUserIDs:
             List<String>.from(map['requestSentToUserIDs'] ?? []),
         declinedRequestsUserIDs:
