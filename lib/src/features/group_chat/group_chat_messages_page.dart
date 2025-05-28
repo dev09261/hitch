@@ -27,6 +27,9 @@ class _GroupChatMessagesPageState extends State<GroupChatMessagesPage> {
   late Stream<List<MessagesModel>> messagesStream;
 
   String get getGroupUsersName {
+    if (widget.chat.groupName != '') {
+      return widget.chat.groupName;
+    }
     String groupName = '';
     for (var member in widget.chat.members) {
       // debugPrint("Adding ${member.userName}");

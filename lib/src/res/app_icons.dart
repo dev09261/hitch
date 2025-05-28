@@ -13,6 +13,8 @@ class AppIcons{
   static const icNoPlayerFound = 'assets/icons/ic_no_player_found.png';
   static const welcomePageAnim ='assets/gif/hitch-ball-landing-page.gif';
   static const bouncingBallAnim = 'assets/gif/hitch-ball-bouce.gif';
+  static const loaderAnim = 'assets/gif/loader.gif';
+  static const loader1Anim = 'assets/gif/loader1.gif';
   static const myProfilePic = 'https://plus.unsplash.com/premium_photo-1661607632557-2ee35619906b?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTd8fFRlbm5pcyUyMHBsYXllciUyMHByb2ZpbGV8ZW58MHx8MHx8fDA%3D';
   // static const icMail = 'assets/icons/ic_mail.png';
   static const icAppleCardPng = 'assets/icons/ic_apple_card_png.png';

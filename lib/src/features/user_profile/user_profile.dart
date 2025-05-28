@@ -60,17 +60,22 @@ class _UserProfileState extends State<UserProfile> {
 
   bool playerTypePickleBal = false;
   bool playerTypeTennis = false;
+  bool playerTypePadel = false;
   bool playerTypeCoach = false;
 
   PlayerLevelModel? _selectedPickleBallPlayerLevel;
   PlayerLevelModel? _selectedTennisBallPlayerLevel;
+  PlayerLevelModel? _selectedPadelBallPlayerLevel;
   CoachExperienceModel? _selectedCoachPickleBallExperienceModel;
   CoachExperienceModel? _selectedCoachTennisExperienceModel;
+  CoachExperienceModel? _selectedCoachPadelExperienceModel;
 
   late List<PlayerLevelModel> _pickleBallPlayerLevels;
   late List<PlayerLevelModel> _tennisBallPlayersLevels;
+  late List<PlayerLevelModel> _padelBallPlayersLevels;
   late List<CoachExperienceModel> _coachPickleBallExperienceList;
   late List<CoachExperienceModel> _coachTennisExperienceList;
+  late List<CoachExperienceModel> _coachPadelExperienceList;
 
   bool _isAvailableDaily = true;
   bool _isAvailableInMorning = true;
@@ -94,8 +99,10 @@ class _UserProfileState extends State<UserProfile> {
     super.initState();
     _pickleBallPlayerLevels = AppData.getPickleBallPlayerLevels;
     _tennisBallPlayersLevels = AppData.getTennisBallPlayerLevels;
+    _padelBallPlayersLevels = AppData.getPadelBallPlayerLevels;
     _coachPickleBallExperienceList = AppData.getCoachPickleBallExperienceList;
     _coachTennisExperienceList = AppData.getCoachTennisBallExperienceList;
+    _coachPadelExperienceList = AppData.getCoachPadelBallExperienceList;
     daysAvailable = AppData.daysAvailable;
     _newlyUploadedFiles = [];
     _userUploadedSportsVideos = [];
@@ -243,33 +250,52 @@ class _UserProfileState extends State<UserProfile> {
                                 ),
                               ),
                               Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        flex: 4,
-                                        child: HitchCheckbox(
-                                            text: playerTypePickleBallValue,
-                                            onChange: _onPlayerTypePickleChange,
-                                            value: playerTypePickleBal &&
-                                                !playerTypeCoach)),
-                                    Expanded(
-                                        flex: 3,
-                                        child: HitchCheckbox(
-                                            text: playerTypeTennisValue,
-                                            onChange: _onPlayerTypeTennisChange,
-                                            value: playerTypeTennis &&
-                                                !playerTypeCoach)),
-                                    Expanded(
-                                        flex: 3,
-                                        child: HitchCheckbox(
-                                            text: playerTypeCoachValue,
-                                            onChange: _onPlayerTypeCoachChange,
-                                            value: playerTypeCoach)),
-                                  ],
-                                ),
-                              ),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 4,
+                                              child: HitchCheckbox(
+                                                  text:
+                                                      playerTypePickleBallValue,
+                                                  onChange:
+                                                      _onPlayerTypePickleChange,
+                                                  value: playerTypePickleBal &&
+                                                      !playerTypeCoach)),
+                                          Expanded(
+                                              flex: 5,
+                                              child: HitchCheckbox(
+                                                  text: playerTypeTennisValue,
+                                                  onChange:
+                                                      _onPlayerTypeTennisChange,
+                                                  value: playerTypeTennis &&
+                                                      !playerTypeCoach)),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                              flex: 4,
+                                              child: HitchCheckbox(
+                                                  text: "Padel",
+                                                  onChange:
+                                                      _onPlayerTypePadelChange,
+                                                  value: playerTypePadel &&
+                                                      !playerTypeCoach)),
+                                          Expanded(
+                                              flex: 5,
+                                              child: HitchCheckbox(
+                                                  text: playerTypeCoachValue,
+                                                  onChange:
+                                                      _onPlayerTypeCoachChange,
+                                                  value: playerTypeCoach)),
+                                        ],
+                                      ),
+                                    ],
+                                  )),
                               if (playerTypePickleBal && dupr == null)
                                 Padding(
                                     padding: const EdgeInsets.all(20),
@@ -278,13 +304,11 @@ class _UserProfileState extends State<UserProfile> {
                                         dupr = await showDialog<DuprModel>(
                                           context: context,
                                           builder: (context) =>
-                                          const ConnectDuprDialog(),
+                                              const ConnectDuprDialog(),
                                         );
 
                                         if (dupr != null) {
-                                          setState(() {
-
-                                          });
+                                          setState(() {});
                                         }
                                       },
                                       child: const Text(
@@ -295,18 +319,21 @@ class _UserProfileState extends State<UserProfile> {
                                             fontWeight: FontWeight.w700),
                                       ),
                                     )),
-
                               if (playerTypePickleBal && dupr != null)
                                 Padding(
                                   padding: const EdgeInsets.all(20),
                                   child: Text(
-                                    "DUPR: ${dupr!.doubleRating??0}",
-                                    style: const TextStyle(
-                                        fontSize: 16),
-                                  ),),
+                                    "DUPR: ${dupr!.doubleRating ?? 0}",
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ),
                               Padding(
                                 padding: EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: playerTypePickleBal && dupr != null? 0:20),
+                                    horizontal: 20,
+                                    vertical:
+                                        playerTypePickleBal && dupr != null
+                                            ? 0
+                                            : 20),
                                 child: Column(
                                   children: [
                                     if (playerTypePickleBal && dupr == null)
@@ -345,6 +372,29 @@ class _UserProfileState extends State<UserProfile> {
                                           hintText: 'Select Tennis level (UTR)',
                                         ),
                                       ),
+                                    if (playerTypePadel)
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          top: playerTypePickleBal ||
+                                                  playerTypeTennis
+                                              ? 30.0
+                                              : 0,
+                                        ),
+                                        child:
+                                            PlayerLevelDropdownTextfieldWidget(
+                                          isEmpty:
+                                              _selectedPadelBallPlayerLevel ==
+                                                  null,
+                                          selectedValue:
+                                              _selectedPadelBallPlayerLevel,
+                                          onChanged: (newValue) => setState(() =>
+                                              _selectedPadelBallPlayerLevel =
+                                                  newValue),
+                                          playerLevels: _padelBallPlayersLevels,
+                                          width: size.width * 0.8,
+                                          hintText: 'Select Padel Level',
+                                        ),
+                                      ),
                                     if (playerTypeCoach)
                                       Column(
                                         children: [
@@ -379,13 +429,28 @@ class _UserProfileState extends State<UserProfile> {
                                               width: size.width * 0.8,
                                               hintText:
                                                   'Select years of coaching (UTR)'),
+                                          const SizedBox(
+                                            height: 20,
+                                          ),
+                                          CoachExperienceLevelsDropDownWidget(
+                                              isEmpty:
+                                                  _selectedCoachPadelExperienceModel ==
+                                                      null,
+                                              selectedValue:
+                                                  _selectedCoachPadelExperienceModel,
+                                              onChanged: (val) => setState(() =>
+                                                  _selectedCoachPadelExperienceModel =
+                                                      val),
+                                              experienceLevels:
+                                                  _coachPadelExperienceList,
+                                              width: size.width * 0.8,
+                                              hintText:
+                                                  'Select years of coaching (Padel)'),
                                         ],
                                       ),
-
                                     const SizedBox(
                                       height: 30,
                                     ),
-
                                     AppTextField(
                                       textEditingController: _bioController,
                                       hintText: 'Bio  ',
@@ -627,10 +692,19 @@ class _UserProfileState extends State<UserProfile> {
     setState(() {});
   }
 
+  void _onPlayerTypePadelChange(bool? value) {
+    if (playerTypeCoach) {
+      playerTypeCoach = false;
+    }
+    playerTypePadel = value!;
+    setState(() {});
+  }
+
   void _onPlayerTypeCoachChange(bool? value) {
     playerTypeCoach = value!;
     playerTypePickleBal = false;
     playerTypeTennis = false;
+    playerTypePadel = false;
     setState(() {});
   }
 
@@ -733,6 +807,7 @@ class _UserProfileState extends State<UserProfile> {
         'profilePicture': imageUrl,
         playerTypePickleKey: playerTypePickleBal,
         playerTypeTennisKey: playerTypeTennis,
+        playerTypePadelKey: playerTypePadel,
         playerTypeCoachKey: playerTypeCoach,
         bioKey: bioText,
         cellNumberKey: cellNumber,
@@ -742,19 +817,22 @@ class _UserProfileState extends State<UserProfile> {
         experienceKey: experience,
         pickleBallPlayerLevelKey: _selectedPickleBallPlayerLevel?.toMap(),
         tennisBallPlayerLevelKey: _selectedTennisBallPlayerLevel?.toMap(),
+        padelBallPlayerLevelKey: _selectedPadelBallPlayerLevel?.toMap(),
         coachTennisExperienceLevelKey:
             _selectedCoachTennisExperienceModel?.toMap(),
         coachPickleBallExperienceLevelKey:
             _selectedCoachPickleBallExperienceModel?.toMap(),
+        coachPadelBallExperienceLevelKey:
+            _selectedCoachPadelExperienceModel?.toMap(),
         isAvailableInMorningKey: _isAvailableInMorning,
         isAvailableDailyKey: _isAvailableDaily,
         matchTypeKey: _selectedMatchType.isEmpty ? null : _selectedMatchType,
         genderTypeKey: _selectedGenderType.isEmpty ? null : _selectedGenderType,
         availableDaysToPlayKey: updatedDays,
-        "myDuprID" : dupr?.duprId,
-        "isConnectedToDupr" : dupr != null,
-        "duprDoubleRating" : dupr?.doubleRating,
-        "duprSingleRating" : dupr?.singleRating,
+        "myDuprID": dupr?.duprId,
+        "isConnectedToDupr": dupr != null,
+        "duprDoubleRating": dupr?.doubleRating,
+        "duprSingleRating": dupr?.singleRating,
       };
 
       await userAuthService.updateUserInfo(updatedMap: map);
@@ -787,6 +865,7 @@ class _UserProfileState extends State<UserProfile> {
         _emailController = TextEditingController(text: user!.emailAddress);
         playerTypePickleBal = user!.playerTypePickle;
         playerTypeTennis = user!.playerTypeTennis;
+        playerTypePadel = user!.playerTypePadel;
         playerTypeCoach = user!.playerTypeCoach;
         _isAvailableInMorning = user!.isAvailableInMorning;
         _isAvailableDaily = user!.isAvailableDaily;
@@ -797,10 +876,15 @@ class _UserProfileState extends State<UserProfile> {
 
         _selectedPickleBallPlayerLevel = user!.pickleBallPlayerLevel;
         _selectedTennisBallPlayerLevel = user!.tennisBallPlayerLevel;
+        _selectedPadelBallPlayerLevel = user!.padelBallPlayerLevel;
+
         _selectedCoachPickleBallExperienceModel =
             user!.coachPickleBallExperienceLevel;
         _selectedCoachTennisExperienceModel =
             user!.coachTennisBallExperienceLevel;
+        _selectedCoachPadelExperienceModel =
+            user!.coachPadelBallExperienceLevel;
+
         daysAvailable = daysAvailable.map((item) {
           if (user!.availableDaysToPlay.contains(item['day'])) {
             item['isSelected'] = true;
@@ -810,7 +894,7 @@ class _UserProfileState extends State<UserProfile> {
 
         if (user!.isConnectedToDupr) {
           dupr = DuprModel(
-              status: 'success',
+            status: 'success',
             duprId: user!.myDuprID,
             singleRating: user!.duprSingleRating,
             doubleRating: user!.duprDoubleRating,
@@ -826,9 +910,7 @@ class _UserProfileState extends State<UserProfile> {
     if (dupr != null) {
       DuprService().duprId = user!.myDuprID;
       dupr = await DuprService().getDupr();
-      setState(() {
-
-      });
+      setState(() {});
     }
   }
 

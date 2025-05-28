@@ -20,11 +20,14 @@ const playerKey = 'player';
 const distanceKey = 'distance';
 const playerTypePickleKey ='playerTypePickle';
 const playerTypeTennisKey ='playerTypeTennis';
+const playerTypePadelKey ='playerTypePadel';
 const playerTypeCoachKey ='playerTypeCoach';
 const pickleBallPlayerLevelKey = 'pickleBallPlayerLevel';
 const tennisBallPlayerLevelKey = 'tennisBallPlayerLevel';
+const padelBallPlayerLevelKey = 'padelBallPlayerLevel';
 const coachTennisExperienceLevelKey ='coachTennisExperienceLevel';
 const coachPickleBallExperienceLevelKey ='coachPickleBallExperienceLevel';
+const coachPadelBallExperienceLevelKey ='coachPadelBallExperienceLevel';
 const distanceFromCurrentLocationKey = 'distanceFromCurrentLocation';
 const matchTypeKey = 'matchType';
 const genderTypeKey ='genderType';
@@ -37,6 +40,7 @@ const clubKey = 'club';
 
 const playerTypeCoachValue ='Coach';
 const playerTypeTennisValue = 'Tennis';
+const playerTypePadelValue = 'Padel';
 const playerTypePickleBallValue = 'Pickleball';
 
 const eventTypeEveryone = 'everyone';

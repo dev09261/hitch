@@ -94,7 +94,7 @@ class _EventsPageState extends State<EventsPage> {
           ),
           const SizedBox(height: 10,),
           _loadingTournaments && page == 1
-              ? const Expanded(child: LoadingWidget())
+              ? const Expanded(child: LoadingWidget(type: 'event',))
               : _buildListView(),
         ],
       ),
@@ -151,12 +151,19 @@ class _EventsPageState extends State<EventsPage> {
         return dateB.compareTo(dateA);
       });
     }
+
+    if (combinedList.isEmpty) {
+      return const Expanded(child: LoadingWidget(type: 'event',));
+    }
+
     return Expanded(child: ListView.builder(
       controller: _scrollController,
         itemCount: combinedList.length + (hasMore ? 1 : 0),
         itemBuilder: (ctx, index){
           if (index == combinedList.length) {
-            return const LoadingWidget();
+            return const SizedBox(width: 100,
+              child: LoadingWidget(isMoreLoading: true,),
+            );
           }
           final item = combinedList[index];
           if(item is Tournament){

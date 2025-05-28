@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hitch/src/bloc_cubit/players_coaches_cubit/players_coaches_cubit.dart';
 import 'package:hitch/src/models/hitches_model.dart';
+import 'package:hitch/src/models/pending_hitches.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
 import 'package:hitch/src/res/app_colors.dart';
@@ -100,6 +101,15 @@ class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
       List<String> requestSentToUserIDs = currentUser.requestSentToUserIDs;
       requestSentToUserIDs.add(player.userID);
       currentUser.requestSentToUserIDs = requestSentToUserIDs;
+      await PendingHitchesModel(
+        uid: '${currentUser.userID}${player.userID}',
+        senderId: currentUser.userID,
+        senderName: currentUser.userName,
+        senderToken: currentUser.token,
+        receiverId: player.userID,
+        receiverName: player.userName,
+        receiverToken: player.token,
+      ).create();
       await docRef.set(currentUser.toMap());
       NotificationService.sendNotification(receiver: player,  sender: currentUser);
     }else{
@@ -108,6 +118,17 @@ class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
         List<String> requestSentToUserIDs = currentUser!.requestSentToUserIDs;
         requestSentToUserIDs.add(player.userID);
         currentUser!.requestSentToUserIDs = requestSentToUserIDs;
+
+        await PendingHitchesModel(
+          uid: '${currentUser!.userID}${player.userID}',
+          senderId: currentUser!.userID,
+          senderName: currentUser!.userName,
+          senderToken: currentUser!.token,
+          receiverId: player.userID,
+          receiverName: player.userName,
+          receiverToken: player.token,
+        ).create();
+
         await docRef.set(currentUser!.toMap());
 
         NotificationService.sendNotification(receiver: player, sender: currentUser!);

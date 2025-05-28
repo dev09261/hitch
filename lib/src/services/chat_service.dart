@@ -317,7 +317,7 @@ class ChatService {
     });
   }
 
-  static Future<void> createGroupChat({required List<HitchesModel> hitches}) async {
+  static Future<void> createGroupChat({required List<HitchesModel> hitches, required String groupName}) async {
     String groupChatID = DateTime.now().microsecondsSinceEpoch.toString();
     DateTime createdAt = DateTime.now();
     String adminID = FirebaseAuth.instance.currentUser!.uid;
@@ -340,6 +340,7 @@ class ChatService {
         createdAt: createdAt,
         members: members,
         memberIDs: memberIDs,
+        groupName: groupName,
         adminID: adminID);
 
     await FirebaseFirestore.instance.collection(groupChatsCollection).doc(groupChatID).set(groupChatModel.toMap());

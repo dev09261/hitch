@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:hitch/src/features/group_chat/create_group_chat_page.dart';
 import 'package:hitch/src/features/main_menu/hitches_page/hitches_groups_page.dart';
 import 'package:hitch/src/features/main_menu/hitches_page/hitches_page.dart';
+import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
+import 'package:hitch/src/providers/subscription_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../../models/user_model.dart';
 import '../../../res/app_colors.dart';
@@ -120,7 +123,17 @@ class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProv
                     child: IconButton(
                         onPressed: selectedTab == 0
                             ? null
-                            : ()=> Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CreateGroupChatPage())),
+                            : () {
+                          final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
+
+                          // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
+                          final isSubscribed = subscriptionProvider.getIsSubscribed;
+                          if (isSubscribed) {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CreateGroupChatPage()));
+                          } else {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+                          }
+                        },
                         icon: Icon(
                           Icons.add,
                           size: 30,

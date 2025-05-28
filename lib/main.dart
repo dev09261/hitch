@@ -17,6 +17,7 @@ import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
 import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
+import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/auth_service.dart';
 import 'package:hitch/src/services/dupr_service.dart';
@@ -27,7 +28,7 @@ import 'src/providers/subscription_provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -39,13 +40,10 @@ void main() async{
       ChangeNotifierProvider(create: (_) => LoggedInUserProvider()),
       ChangeNotifierProvider(create: (_) => ContactedPlayersProvider()),
       ChangeNotifierProvider(create: (_) => HitchesProvider()),
-
     ],
     child: const MyApp(),
   ));
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -55,52 +53,59 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_)=> MainMenuTabChangeBloc()),
-        BlocProvider(create: (_)=> PlayersCoachesCubit()),
-        BlocProvider(create: (_)=> UserInfoCubit()),
-        BlocProvider(create: (_)=> CourtsCubit()),
-        BlocProvider(create: (_)=> HitchesCubit()),
+        BlocProvider(create: (_) => MainMenuTabChangeBloc()),
+        BlocProvider(create: (_) => PlayersCoachesCubit()),
+        BlocProvider(create: (_) => UserInfoCubit()),
+        BlocProvider(create: (_) => CourtsCubit()),
+        BlocProvider(create: (_) => HitchesCubit()),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+          debugShowCheckedModeBanner: false,
           title: appName,
           navigatorKey: navigatorKey, // Assign the global navigator key here
           theme: HitchAppTheme.hitchAppTheme,
-          home: FutureBuilder(future: doesUserExists(), builder: (ctx, snapshot){
-            if(snapshot.hasData){
-              return snapshot.requireData ? const PermissionsPage() : const SignInWithAccountsPage();
-            }else {
-              bool isWaiting = snapshot.connectionState == ConnectionState.waiting;
-              bool isError = snapshot.hasError;
-              return Scaffold(
-                body: SafeArea(
-                  child: isWaiting
-                      ? const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                LoadingWidget(),
-                                SizedBox(height: 20,),
-                                Text("Getting user info ...")
-                              ],
-                            )
+          home: FutureBuilder(
+              future: doesUserExists(),
+              builder: (ctx, snapshot) {
+                if (snapshot.hasData) {
+                  return snapshot.requireData
+                      ? const PermissionsPage()
+                      : const SignInWithAccountsPage();
+                } else {
+                  bool isWaiting =
+                      snapshot.connectionState == ConnectionState.waiting;
+                  bool isError = snapshot.hasError;
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    body: SafeArea(
+                      child: isWaiting
+                          ? const Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 20,
+                          left: 18,
+                          right: 18
+                        ),
+                        child: LoadingWidget(),
+                      )
                           : isError
-                      ? Center(child: Text(snapshot.error.toString()),)
-                      : const SizedBox() ,
-                ),
-              );
-            }
-          })
-      ),
+                              ? Center(
+                                  child: Text(snapshot.error.toString()),
+                                )
+                              : const SizedBox(),
+                    ),
+                  );
+                }
+              })),
     );
   }
 
-  Future<bool> doesUserExists()async{
+  Future<bool> doesUserExists() async {
     bool result = false;
-    try{
-      if(FirebaseAuth.instance.currentUser != null){
+    try {
+      if (FirebaseAuth.instance.currentUser != null) {
         UserAuthService service = UserAuthService.instance;
         UserModel? user = await service.getCurrentUser();
-        result = user!= null;
+        result = user != null;
 
         if (user?.isConnectedToDupr ?? false) {
           Future.microtask(() async {
@@ -108,17 +113,16 @@ class MyApp extends StatelessWidget {
             DuprModel dupr = await DuprService().getDupr();
             if (dupr.status == 'success') {
               UserAuthService.instance.updateUserInfo(updatedMap: {
-                'isConnectedToDupr' : true,
-                'myDuprID' : dupr.duprId,
-                'duprDoubleRating' : dupr.doubleRating,
-                'duprSingleRating' : dupr.singleRating,
+                'isConnectedToDupr': true,
+                'myDuprID': dupr.duprId,
+                'duprDoubleRating': dupr.doubleRating,
+                'duprSingleRating': dupr.singleRating,
               });
             }
           });
         }
-
       }
-    }catch(e){
+    } catch (e) {
       debugPrint("Exception while checking if user exists: ${e.toString()}");
     }
 

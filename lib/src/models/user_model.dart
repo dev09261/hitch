@@ -10,6 +10,7 @@ class UserModel {
   String profilePicture;
   bool playerTypePickle;
   bool playerTypeTennis;
+  bool playerTypePadel;
   bool playerTypeCoach;
   String level;
   String bio;
@@ -29,8 +30,10 @@ class UserModel {
   double? longitude;
   PlayerLevelModel? pickleBallPlayerLevel;
   PlayerLevelModel? tennisBallPlayerLevel;
+  PlayerLevelModel? padelBallPlayerLevel;
   CoachExperienceModel? coachPickleBallExperienceLevel;
   CoachExperienceModel? coachTennisBallExperienceLevel;
+  CoachExperienceModel? coachPadelBallExperienceLevel;
   List<UploadedFileModel> uploadedSportsPhotos;
   bool isAvailableDaily;
   bool isAvailableInMorning;
@@ -47,6 +50,7 @@ class UserModel {
       required this.profilePicture,
       required this.playerTypePickle,
       required this.playerTypeTennis,
+      required this.playerTypePadel,
       required this.playerTypeCoach,
       this.level = '',
       required this.bio,
@@ -64,8 +68,10 @@ class UserModel {
       this.requestSentToUserIDs = const [],
       this.coachPickleBallExperienceLevel,
       this.coachTennisBallExperienceLevel,
+      this.coachPadelBallExperienceLevel,
       this.pickleBallPlayerLevel,
       this.tennisBallPlayerLevel,
+      this.padelBallPlayerLevel,
       this.uploadedSportsPhotos = const [],
       this.isAvailableDaily = true,
       this.isAvailableInMorning = false,
@@ -85,6 +91,7 @@ class UserModel {
       'profilePicture': profilePicture,
       'playerTypePickle': playerTypePickle,
       'playerTypeTennis': playerTypeTennis,
+      'playerTypePadel': playerTypePadel,
       'playerTypeCoach': playerTypeCoach,
       'level': level,
       'bio': bio,
@@ -107,8 +114,10 @@ class UserModel {
       'duprSingleRating': duprSingleRating,
       'coachPickleBallExperienceLevel': coachPickleBallExperienceLevel?.toMap(),
       'coachTennisBallExperienceLevel': coachTennisBallExperienceLevel?.toMap(),
+      'coachPadelBallExperienceLevel': coachPadelBallExperienceLevel?.toMap(),
       'pickleBallPlayerLevel': pickleBallPlayerLevel?.toMap(),
       'tennisBallPlayerLevel': tennisBallPlayerLevel?.toMap(),
+      'padelBallPlayerLevel': padelBallPlayerLevel?.toMap(),
       uploadedFilesKey: uploadedSportsPhotos
           .map((uploadedSportsPhotos) => uploadedSportsPhotos.toMap())
           .toList(),
@@ -129,6 +138,7 @@ class UserModel {
         profilePicture: map['profilePicture'],
         playerTypePickle: map['playerTypePickle'] ?? true,
         playerTypeTennis: map['playerTypeTennis'] ?? true,
+        playerTypePadel: map['playerTypePadel'] ?? true,
         playerTypeCoach: map['playerTypeCoach'] ?? false,
         level: map['level'],
         bio: map['bio'],
@@ -137,7 +147,9 @@ class UserModel {
         age: map['age'],
         experience: map['experience'],
         token: map['token'] ?? '',
-        distanceFromCurrentLocation: map['distanceFromCurrentLocation'] > 20 ? 20:map['distanceFromCurrentLocation'],
+        distanceFromCurrentLocation: map['distanceFromCurrentLocation'] > 20
+            ? 20
+            : map['distanceFromCurrentLocation'],
         requestSentToUserIDs:
             List<String>.from(map['requestSentToUserIDs'] ?? []),
         declinedRequestsUserIDs:
@@ -162,11 +174,19 @@ class UserModel {
                 ? CoachExperienceModel.fromMap(
                     map['coachTennisBallExperienceLevel'])
                 : null,
+        coachPadelBallExperienceLevel:
+        map['coachPadelBallExperienceLevel'] != null
+            ? CoachExperienceModel.fromMap(
+            map['coachPadelBallExperienceLevel'])
+            : null,
         pickleBallPlayerLevel: map['pickleBallPlayerLevel'] != null
             ? PlayerLevelModel.fromMap(map['pickleBallPlayerLevel'])
             : null,
         tennisBallPlayerLevel: map['tennisBallPlayerLevel'] != null
             ? PlayerLevelModel.fromMap(map['tennisBallPlayerLevel'])
+            : null,
+        padelBallPlayerLevel: map['padelBallPlayerLevel'] != null
+            ? PlayerLevelModel.fromMap(map['padelBallPlayerLevel'])
             : null,
         uploadedSportsPhotos: (map['uploadedFiles'] as List<dynamic>? ?? [])
             .map((fileMap) =>

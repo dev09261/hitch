@@ -29,8 +29,10 @@ class UserInfoCubit extends Cubit<UserInfoStates>{
       emit(UpdatingUserInfo());
       PlayerLevelModel? pickleBallPlayerLevel = userMap[pickleBallPlayerLevelKey];
       PlayerLevelModel? tennisBallPlayerLevel = userMap[tennisBallPlayerLevelKey];
+      PlayerLevelModel? padelBallPlayerLevel = userMap[padelBallPlayerLevelKey];
       CoachExperienceModel? coachPickleBallExperience = userMap[coachPickleBallExperienceLevelKey];
       CoachExperienceModel? coachTennisBallExperience = userMap[coachTennisExperienceLevelKey];
+      CoachExperienceModel? coachPadelBallExperience = userMap[coachPadelBallExperienceLevelKey];
 
 
       UserModel user = UserModel(
@@ -40,7 +42,8 @@ class UserInfoCubit extends Cubit<UserInfoStates>{
         profilePicture: userMap[profileKey] ?? '',
         bio: userMap[bioKey],
         playerTypePickle: userMap[playerTypePickleKey],
-        playerTypeTennis: userMap[playerTypeTennisKey],
+          playerTypeTennis: userMap[playerTypeTennisKey],
+          playerTypePadel: userMap[playerTypePadelKey],
         playerTypeCoach: userMap[playerTypeCoachKey],
           isConnectedToDupr: userMap['isConnectedToDupr'],
           myDuprID: userMap['myDuprID'],
@@ -51,9 +54,11 @@ class UserInfoCubit extends Cubit<UserInfoStates>{
         cellNumber: cellNumber,
         gender: gender,
         pickleBallPlayerLevel: pickleBallPlayerLevel,
-        tennisBallPlayerLevel: tennisBallPlayerLevel,
+          tennisBallPlayerLevel: tennisBallPlayerLevel,
+          padelBallPlayerLevel: padelBallPlayerLevel,
         coachPickleBallExperienceLevel: coachPickleBallExperience,
-        coachTennisBallExperienceLevel: coachTennisBallExperience,
+          coachTennisBallExperienceLevel: coachTennisBallExperience,
+          coachPadelBallExperienceLevel: coachPadelBallExperience,
         availableDaysToPlay: userMap[availableDaysToPlayKey] ?? [],
         isReviewed: userMap[isReviewedKey] ?? false
       );

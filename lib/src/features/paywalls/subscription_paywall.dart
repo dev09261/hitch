@@ -339,7 +339,7 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
                 RichText(
                     text: const TextSpan(children: [
                   TextSpan(
-                      text: "50% OFF ",
+                      text: "33% OFF ",
                       style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'Inter',

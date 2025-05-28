@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
+import 'package:hitch/src/models/pending_hitches.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
 import 'package:hitch/src/providers/subscription_provider.dart';
@@ -132,6 +133,16 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
       playersCoachesCubit.onShowLetsPlayAnim();
       await Future.delayed(const Duration(seconds: 1));
       playersCoachesCubit.onHideLetsPlayAnim();
+
+      await PendingHitchesModel(
+        uid: '${currentUser.userID}${widget.player.userID}',
+        senderId: currentUser.userID,
+        senderName: currentUser.userName,
+        senderToken: currentUser.token,
+        receiverId: widget.player.userID,
+        receiverName: widget.player.userName,
+        receiverToken: widget.player.token,
+      ).create();
 
       //addHitchToUser is responsible for adding hitch request to users and also sending notification and email
       await HitchesService.addHitchToUser(receiver: widget.player, sender: currentUser);

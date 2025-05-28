@@ -5,7 +5,7 @@ import 'dart:ui' as ui;
 import 'package:hitch/src/res/app_text_styles.dart';
 
 class HitchSliderWidget extends StatefulWidget{
-  const HitchSliderWidget({super.key,required this.onChange, this.distanceFromCurrentLocation = 30, this.isScrollable = true});
+  const HitchSliderWidget({super.key,required this.onChange, this.distanceFromCurrentLocation = 10, this.isScrollable = true});
   final Function(double value) onChange;
   final double distanceFromCurrentLocation;
   final bool isScrollable;

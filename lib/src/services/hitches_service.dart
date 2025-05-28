@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hitch/src/models/pending_hitches.dart';
 import 'package:hitch/src/notifications/notification_service.dart';
 import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
@@ -65,7 +66,6 @@ class HitchesService{
         .doc(hitchRequest.hitchID)
         .update({hitchesStatusKey: hitchStatus});
 
-
     //if current user declines the request, the receiver will see that the request I sent was rejected
     String receiverHitchStatus =  hitchStatus == hitchesStateDeclined ?  hitchesStateRejected : hitchStatus;
     await FirebaseFirestore.instance
@@ -75,6 +75,7 @@ class HitchesService{
         .doc(hitchRequest.hitchID)
         .update({hitchesStatusKey: receiverHitchStatus});
 
+    await PendingHitchesModel(uid: '${hitchRequest.user.userID}$currentUID').delete();
 
     if(hitchStatus == hitchesStateDeclined){
       try {

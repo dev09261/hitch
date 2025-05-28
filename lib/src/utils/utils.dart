@@ -286,34 +286,55 @@ class Utils {
       
     }
 
-    if(player.pickleBallPlayerLevel != null && player.tennisBallPlayerLevel != null){
+    String level = '';
+
+    if (player.pickleBallPlayerLevel != null) {
       if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} DUPR & ${player.tennisBallPlayerLevel!.levelRank} UTR';
+        level = '${player.duprDoubleRating} DUPR';
+      } else {
+        level = '$pickLevelLabel Pickleball';
       }
-      return '$pickLevelLabel Pickleball & ${player.tennisBallPlayerLevel!.levelRank} UTR';
-    }else if(player.pickleBallPlayerLevel != null){
-      if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} DUPR';
-      }
-      return '$pickLevelLabel Pickleball';
-    }else if(player.tennisBallPlayerLevel != null){
-      return '${player.tennisBallPlayerLevel!.levelRank} UTR ';
-    }else if(player.playerTypeCoach){
-      return getCoachExperienceDetails(player);
-    }else if(player.playerTypePickle && player.playerTypeTennis){
-      if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} DUPR & UTR';
-      }
-      return '${player.level} DUPR & UTR';
-    }else if(player.playerTypePickle){
-      if (player.isConnectedToDupr) {
-        return '${player.duprDoubleRating} DUPR';
-      }
-      return '${player.level} Pickleball';
-    }else if(player.playerTypeTennis){
-      return '${player.level} UTR';
     }
-    return player.level;
+
+    if (player.tennisBallPlayerLevel != null) {
+      if (level.isNotEmpty) {
+        level += ' & ${player.tennisBallPlayerLevel!.levelRank} UTR';
+      } else {
+        level = '${player.tennisBallPlayerLevel!.levelRank} UTR';
+      }
+    }
+
+    if (player.padelBallPlayerLevel != null && player.playerTypePadel) {
+      if (level.isNotEmpty) {
+        level += ' & ${player.padelBallPlayerLevel!.levelRank} Padel';
+      } else {
+        level = '${player.padelBallPlayerLevel!.levelRank} Padel';
+      }
+    }
+
+    if (level.isEmpty) {
+      if (player.playerTypeCoach) {
+        level = getCoachExperienceDetails(player);
+      } else if (player.playerTypePickle && player.playerTypeTennis) {
+        if (player.isConnectedToDupr) {
+          level = '${player.duprDoubleRating} DUPR & UTR';
+        } else {
+          level = '${player.level} DUPR & UTR';
+        }
+      } else if (player.playerTypePickle) {
+        if (player.isConnectedToDupr) {
+          level = '${player.duprDoubleRating} DUPR';
+        } else {
+          level = '${player.level} Pickleball';
+        }
+      } else if (player.playerTypeTennis) {
+        level = '${player.level} UTR';
+      } else {
+        level = player.level;
+      }
+    }
+
+    return level;
   }
 
   static String getCoachExperienceDetails(UserModel user) {

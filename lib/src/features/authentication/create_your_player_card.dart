@@ -48,23 +48,30 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
 
   late String _pickleBallPlayerText;
   late String _tennisBallPlayerText;
+  late String _padelBallPlayerText;
   late String _coachText;
 
   bool _playerTypePickleBal = false;
   bool _playerTypeTennis = false;
+  bool _playerTypePadel = false;
   bool _playerTypeCoach= false;
 
   PlayerLevelModel? _selectedPickleBallPlayerLevel;
   PlayerLevelModel? _selectedTennisBallPlayerLevel;
+  PlayerLevelModel? _selectedPadelBallPlayerLevel;
+
   CoachExperienceModel? _selectedCoachPickleBallExperienceModel;
   CoachExperienceModel? _selectedCoachTennisExperienceModel;
+  CoachExperienceModel? _selectedCoachPadelExperienceModel;
   DuprModel? dupr;
-
 
   late List<PlayerLevelModel> _pickleBallPlayerLevels;
   late List<PlayerLevelModel> _tennisBallPlayersLevels;
+  late List<PlayerLevelModel> _padelBallPlayersLevels;
+
   late List<CoachExperienceModel> _coachPickleBallExperienceList;
   late List<CoachExperienceModel> _coachTennisExperienceList;
+  late List<CoachExperienceModel> _coachPadelExperienceList;
 
   @override
   void initState() {
@@ -74,12 +81,16 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
 
     _pickleBallPlayerText = playerTypePickleBallValue;
     _tennisBallPlayerText = playerTypeTennisValue;
+    _padelBallPlayerText = playerTypePadelValue;
     _coachText = playerTypeCoachValue;
 
     _pickleBallPlayerLevels = AppData.getPickleBallPlayerLevels;
     _tennisBallPlayersLevels = AppData.getTennisBallPlayerLevels;
+    _padelBallPlayersLevels = AppData.getPadelBallPlayerLevels;
+
     _coachPickleBallExperienceList = AppData.getCoachPickleBallExperienceList;
     _coachTennisExperienceList = AppData.getCoachTennisBallExperienceList;
+    _coachPadelExperienceList = AppData.getCoachPadelBallExperienceList;
 
     if(widget.comingFromSignup){
       _fullNameController.text = widget.name;
@@ -165,23 +176,36 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
                       
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
-                                child: Row(
+                                child: Column(
                                   children: [
-                                    Expanded(
-                                        flex:4,
-                                        child: HitchCheckbox(text: _pickleBallPlayerText, onChange: _onPlayerTypePickleChange, value: (_playerTypePickleBal  && !_playerTypeCoach))
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex:4,
+                                            child: HitchCheckbox(text: _pickleBallPlayerText, onChange: _onPlayerTypePickleChange, value: (_playerTypePickleBal  && !_playerTypeCoach))
+                                        ),
+                                        Expanded(
+                                            flex: 5,
+                                            child: HitchCheckbox(text: _tennisBallPlayerText, onChange: _onPlayerTypeTennisChange, value: (_playerTypeTennis && !_playerTypeCoach))
+                                        ),
+                                      ],
                                     ),
-                                    Expanded(
-                                        flex: 3,
-                                        child: HitchCheckbox(text: _tennisBallPlayerText, onChange: _onPlayerTypeTennisChange, value: (_playerTypeTennis && !_playerTypeCoach))
-                                    ),
-                                    Expanded(
-                                        flex: 3,
-                                        child: HitchCheckbox(text: _coachText, onChange: _onPlayerTypeCoachChange, value: _playerTypeCoach)
-                      
+
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                            flex:4,
+                                            child: HitchCheckbox(text: _padelBallPlayerText, onChange: _onPlayerTypePadelChange, value: (_playerTypePadel  && !_playerTypeCoach))
+                                        ),
+                                        Expanded(
+                                            flex: 5,
+                                            child: HitchCheckbox(text: _coachText, onChange: _onPlayerTypeCoachChange, value: _playerTypeCoach)
+
+                                        ),
+                                      ],
                                     ),
                                   ],
-                                ),
+                                )
                               ),
                               if (_playerTypePickleBal && dupr == null)
                                 Padding(
@@ -232,7 +256,6 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
                                         hintText: 'Select Pickleball level (DUPR)',
                                       ),
 
-
                                     if(_playerTypeTennis)
                                       Padding(
                                         padding: const EdgeInsets.only(top: 30.0,),
@@ -243,6 +266,19 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
                                           playerLevels: _tennisBallPlayersLevels,
                                           width: size.width*0.8,
                                           hintText: 'Select Tennis level (UTR)',
+                                        ),
+                                      ),
+
+                                    if(_playerTypePadel)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 30.0,),
+                                        child: PlayerLevelDropdownTextfieldWidget(
+                                          isEmpty: _selectedPadelBallPlayerLevel == null,
+                                          selectedValue: _selectedPadelBallPlayerLevel,
+                                          onChanged: (newValue)=> setState(()=> _selectedPadelBallPlayerLevel = newValue),
+                                          playerLevels: _padelBallPlayersLevels,
+                                          width: size.width*0.8,
+                                          hintText: 'Padel',
                                         ),
                                       ),
                       
@@ -256,7 +292,6 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
                                               experienceLevels: _coachPickleBallExperienceList,
                                               width: size.width*0.8,
                                               hintText: 'Select years of coaching (DUPR)'),
-
 
                                           const SizedBox(height: 20,),
                                           CoachExperienceLevelsDropDownWidget(
@@ -344,10 +379,19 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
     setState(() {});
   }
 
+  void _onPlayerTypePadelChange(bool? value) {
+    _playerTypePadel = value!;
+    if(_playerTypeCoach){
+      _playerTypeCoach = false;
+    }
+    setState(() {});
+  }
+
   void _onPlayerTypeCoachChange(bool? value) {
     _playerTypeCoach = value!;
     _playerTypeTennis = false;
     _playerTypePickleBal = false;
+    _playerTypePadel = false;
     setState((){});
   }
 
@@ -374,7 +418,7 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
     // bool isImageSelected = selectedImageFile != null;
     bool isNameAdded = _fullNameController.text.trim().isNotEmpty;
     // bool isBioAdded = _bioTextController.text.isNotEmpty;
-    bool isPlayerSelected = (_playerTypeTennis || _playerTypePickleBal || _playerTypeCoach);
+    bool isPlayerSelected = (_playerTypeTennis || _playerTypePickleBal || _playerTypeCoach || _playerTypePadel);
 
     return (isPlayerSelected && isNameAdded);
   }
@@ -393,11 +437,14 @@ class _CreateYourPlayerCardState extends State<CreateYourPlayerCard> {
       emailAddressKey: email,
       playerTypePickleKey: _playerTypePickleBal,
       playerTypeTennisKey: _playerTypeTennis,
+      playerTypePadelKey: _playerTypePadel,
       playerTypeCoachKey: _playerTypeCoach,
       pickleBallPlayerLevelKey: _selectedPickleBallPlayerLevel,
       tennisBallPlayerLevelKey : _selectedTennisBallPlayerLevel,
+      padelBallPlayerLevelKey : _selectedPadelBallPlayerLevel,
       coachTennisExperienceLevelKey: _selectedCoachTennisExperienceModel,
       coachPickleBallExperienceLevelKey: _selectedCoachPickleBallExperienceModel,
+      coachPadelBallExperienceLevelKey: _selectedCoachPadelExperienceModel,
       // levelKey: selectedLevel['level'],
       userIDKey : _userID,
       "myDuprID" : dupr?.duprId,

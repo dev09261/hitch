@@ -32,11 +32,15 @@ class _PermissionsPageState extends State<PermissionsPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: SafeArea(
-        child: Center(
-            child: LoadingWidget()
-        ),
-      ),
+        backgroundColor: Colors.white,
+        body: SafeArea(child: Padding(
+          padding: EdgeInsets.only(
+              bottom: 20,
+              left: 18,
+              right: 18
+          ),
+          child: LoadingWidget(),
+        ))
     );
   }
 

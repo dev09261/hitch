@@ -26,6 +26,14 @@ class AppData{
     ];
   }
 
+  static List<PlayerLevelModel> get getPadelBallPlayerLevels {
+    return [
+      PlayerLevelModel(levelRank: 'Beg.', levelTitle: "Padel"),
+      PlayerLevelModel(levelRank: 'Intmd.', levelTitle: "Padel"),
+      PlayerLevelModel(levelRank: 'Adv.', levelTitle: "Padel"),
+    ];
+  }
+
   static List<CoachExperienceModel> get getCoachPickleBallExperienceList {
     return [
       CoachExperienceModel(experienceInYears: '1-2 Years', gameTitle: "Pickleball"),
@@ -43,6 +51,16 @@ class AppData{
       CoachExperienceModel(experienceInYears: '5-6 Years', gameTitle: "Tennis"),
       CoachExperienceModel(experienceInYears: '7-8 Years', gameTitle: "Tennis"),
       CoachExperienceModel(experienceInYears: '10+ Years', gameTitle: "Tennis"),
+    ];
+  }
+
+  static List<CoachExperienceModel> get getCoachPadelBallExperienceList {
+    return [
+      CoachExperienceModel(experienceInYears: '1-2 Years', gameTitle: "Padel"),
+      CoachExperienceModel(experienceInYears: '3-4 Years', gameTitle: "Padel"),
+      CoachExperienceModel(experienceInYears: '5-6 Years', gameTitle: "Padel"),
+      CoachExperienceModel(experienceInYears: '7-8 Years', gameTitle: "Padel"),
+      CoachExperienceModel(experienceInYears: '10+ Years', gameTitle: "Padel"),
     ];
   }
 

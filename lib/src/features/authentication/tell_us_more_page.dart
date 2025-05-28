@@ -20,7 +20,7 @@ class TellUsMorePage extends StatefulWidget{
 
 class _TellUsMorePageState extends State<TellUsMorePage> {
 
-  double distanceFromCurrentLocation = 30.0;
+  double distanceFromCurrentLocation = 10.0;
   late TextEditingController _emailController;
   late TextEditingController _ageController;
   late TextEditingController _experienceController;

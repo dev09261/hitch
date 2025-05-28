@@ -1,15 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hitch/src/features/paywalls/subscription_paywall.dart';
 import 'package:hitch/src/models/group_chat_model.dart';
-import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/res/app_text_styles.dart';
 import 'package:hitch/src/services/chat_service.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
-import 'package:provider/provider.dart';
-
 import '../../../res/app_colors.dart';
 import '../../group_chat/group_chat_messages_page.dart';
 
@@ -18,12 +14,8 @@ class HitchesGroupsPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
 
     return
-      !isSubscribed
-          ? const SubscriptionPaywall()
-          :
       Center(
       child: Padding(
         padding:  const EdgeInsets.all(10.0),
@@ -115,6 +107,11 @@ class HitchesGroupsPage extends StatelessWidget{
   }
 
   String _groupName(GroupChatModel groupName) {
+
+    if (groupName.groupName != '') {
+      return groupName.groupName;
+    }
+
     String name = '';
     for (var member in groupName.members) {
       name += '${member.userName}, ';

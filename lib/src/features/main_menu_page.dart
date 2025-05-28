@@ -46,7 +46,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
     const HitchesTabMenuPage(),
   ];
 
-  bool _loadingUserInfo = false;
+  bool _loadingUserInfo = true;
   final _userAuthService = UserAuthService.instance;
   @override
   void initState() {
@@ -69,7 +69,17 @@ class _MainMenuPageState extends State<MainMenuPage> {
         bloc: tabChangeBloc,
         listener: (context, state) {},
         builder: (context, state) {
-          return _loadingUserInfo ? const LoadingWidget() : Scaffold(
+          return _loadingUserInfo ? const Scaffold(
+              backgroundColor: Colors.white,
+              body: SafeArea(child: Padding(
+                padding: EdgeInsets.only(
+                    bottom: 20,
+                    left: 18,
+                    right: 18
+                ),
+                child: LoadingWidget(),
+              ))
+          ) : Scaffold(
             backgroundColor: Colors.white,
             bottomNavigationBar: Container(
               decoration: const BoxDecoration(
@@ -222,7 +232,6 @@ class _MainMenuPageState extends State<MainMenuPage> {
   }
 
   void _initUserInfo()async {
-    setState(()=> _loadingUserInfo = true);
     try{
       UserModel? user = await _userAuthService.getCurrentUser();
       if(user != null){
