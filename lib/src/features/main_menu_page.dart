@@ -55,7 +55,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
     // Initialize background service
 
     if(widget.comingFromNotification){
-      context.read<MainMenuTabChangeBloc>().add(TabChangeEvent(tabIndex: 2));
+      context.read<MainMenuTabChangeBloc>().add(TabChangeEvent(tabIndex: 3));
     }
   }
   
