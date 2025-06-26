@@ -78,8 +78,8 @@ class Tournament {
       isFree: json['isFree'],
       logo: json['logo'],
       registrationCount: json['registrationCount'] ?? 100,
-      lat: json['lat'] ?? 0,
-      lng: json['lng'] ?? 0,
+      lat: (json['lat'] ?? 0) * 1.0,
+      lng: (json['lng'] ?? 0) * 1.0,
       distance: json['distance'] ?? 0
     );
   }

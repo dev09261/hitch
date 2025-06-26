@@ -110,10 +110,6 @@ class _EventsPageState extends State<EventsPage> {
     // await EventService.fetchTournamentIDs();
     _loadingTournaments = false;
    setState(() {});
-
-    if (pickleBallTournaments.length < 2 && hasMore) {
-      _fetchPickleBallTournaments();
-    }
   }
 
   _initLocalTournaments()async {

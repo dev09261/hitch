@@ -73,7 +73,7 @@ class _SignupLastStepPageState extends State<SignupLastStepPage> {
                   const Text("Add your best sport photos & videos", textAlign: TextAlign.center, style: AppTextStyles.regularTextStyle,),
                   const SizedBox(height: 10,),
                   _pickedFiles.isNotEmpty 
-                      ? PickedSportVideosPhotosWidget(pickedFiles: _pickedFiles.map((file)=> file.path).toList(), onPickSportVideos: _onPickSportPhotosAndVideos,)
+                      ? PickedSportVideosPhotosWidget(pickedFiles: _pickedFiles.map((file)=> file.path).toList(), onPickSportVideos: _onPickSportPhotosAndVideos, onRemoveTap: (index) {},)
                       : PickSportVideosPhotosWidget(onPickSportPhotosAndVideos: _onPickSportPhotosAndVideos),
                   const SizedBox(height: 30,),
                   const Text('Availability', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.headingColor),),

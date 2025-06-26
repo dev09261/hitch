@@ -148,28 +148,114 @@ class EventService {
     const String url = "https://fe-gql.pickleball.com/graphql";
     List<Tournament> tournaments = [];
     bool hasMore = true;
+    UserModel? currentUser = await UserAuthService.instance.getCurrentUser();
 
-    final Map<String, dynamic> body = {
-      "query": """
-      query {
-        tournaments(page: $page, limit: $limit) {
-          items {
-          id
-          title
-          dateFrom
-          dateTo
-          location
-          price
-          isFree
-          logo
-          registrationCount
-          lat
-          lng
-          }
-          totalCount
-        }
-      }
-      """
+    if (currentUser == null) {
+      return {'tournaments': tournaments, 'hasMore': false};
+    }
+
+    const String getTournamentsQuery = r'''
+query GetTournaments(
+  $bounds: BoundsInput,
+  $endDate: String,
+  $keyword: String,
+  $clubId: String,
+  $limit: Int,
+  $nowPlaying: Boolean,
+  $nowRegistering: Boolean,
+  $featured: Boolean,
+  $page: Int,
+  $center: LatLng,
+  $userLocationFetch: Boolean,
+  $pastEvents: Boolean,
+  $userId: String,
+  $myTournaments: Boolean,
+  $mtManaging: Boolean,
+  $mtPast: Boolean,
+  $tournamentFilter: String,
+  $partner: String,
+  $startDate: String,
+  $requesterUuid: String
+) {
+  tournaments(
+    bounds: $bounds
+    endDate: $endDate
+    keyword: $keyword
+    clubId: $clubId
+    limit: $limit
+    nowPlaying: $nowPlaying
+    featured: $featured
+    nowRegistering: $nowRegistering
+    userId: $userId
+    page: $page
+    center: $center
+    userLocationFetch: $userLocationFetch
+    myTournaments: $myTournaments
+    mtManaging: $mtManaging
+    mtPast: $mtPast
+    pastEvents: $pastEvents
+    partner: $partner
+    tournamentFilter: $tournamentFilter
+    startDate: $startDate
+    requesterUuid: $requesterUuid
+  ) {
+    items {
+      id
+      dateFrom
+      dateTo
+      currency
+      location
+      isCanceled
+      isCostPerEvent
+      isFavorite
+      isFree
+      isPrizeMoney
+      isRegistrationClosed
+      isTournamentCompleted
+      lat
+      lng
+      logo
+      price
+      registrationCount
+      slug
+      status
+      title
+      additionalImages
+      hideRegisteredPlayers
+      isAdvertiseOnly
+      __typename
+    }
+    totalCount
+    __typename
+  }
+}
+''';
+
+    final Map<String, dynamic> payload = {
+      "operationName": "GetTournaments",
+      "variables": {
+        "bounds": null,
+        "keyword": null,
+        "limit": limit,
+        "center": {"lat": currentUser.latitude!, "lng": currentUser.longitude},
+        "nowPlaying": false,
+        "clubId": null,
+        "nowRegistering": false,
+        "pastEvents": false,
+        "page": page,
+        "featured": false,
+        "myTournaments": false,
+        "mtManaging": false,
+        "mtPast": false,
+        "userLocationFetch": true,
+        "userId": null,
+        "startDate": null,
+        "tournamentFilter": "local",
+        "endDate": null,
+        "partner": null,
+        "requesterUuid": null,
+      },
+      "query": getTournamentsQuery,
     };
 
     final response = await http.post(
@@ -178,7 +264,7 @@ class EventService {
         "Content-Type": "application/json",
         "Accept": "application/json",
       },
-      body: jsonEncode(body),
+      body: jsonEncode(payload),
     );
 
     if (response.statusCode == 200) {
@@ -186,34 +272,30 @@ class EventService {
       // debugPrint("Data get: ${data}");
       PickleballTournamentModel pickleballTournaments =
           PickleballTournamentModel.fromJson(data);
-      hasMore = data['totalCount'] != limit;
+
+      print(pickleballTournaments.data.tournaments.totalCount);
+
+      hasMore = pickleballTournaments.data.tournaments.totalCount > limit;
       UserModel? currentUser = await UserAuthService.instance.getCurrentUser();
       if (currentUser != null) {
         for (var tournament in pickleballTournaments.data.tournaments.items) {
           // Convert tournament dateTo to DateTime
 
           // Only add future tournaments
-          if (tournament.dateFrom.isAfter(DateTime.now())) {
-            double distanceInMeters = Geolocator.distanceBetween(
-                currentUser.latitude!,
-                currentUser.longitude!,
-                tournament.lat,
-                tournament.lng);
+          double distanceInMeters = Geolocator.distanceBetween(
+              currentUser.latitude!,
+              currentUser.longitude!,
+              tournament.lat,
+              tournament.lng);
 
-            if (Utils.getDistanceInMiles(distanceInMeters) <= 200) {
-              tournament.distance = distanceInMeters;
-              tournaments.add(tournament);
-            }
-          }
+          tournament.distance = distanceInMeters;
+          tournaments.add(tournament);
         }
 
         // Sort tournaments from closest to farthest
         tournaments.sort((a, b) => a.distance.compareTo(b.distance));
         tournaments.sort((a, b) => b.dateFrom.compareTo(a.dateFrom));
       }
-    } else {
-      /*print("Error: ${response.statusCode}");
-      print("Response: ${response.body}");*/
     }
 
     return {'tournaments': tournaments, 'hasMore': hasMore};

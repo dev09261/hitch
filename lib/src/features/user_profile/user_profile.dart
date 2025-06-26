@@ -223,6 +223,7 @@ class _UserProfileState extends State<UserProfile> {
                                                               selectedIndex:
                                                                   index)));
                                             },
+                                      onRemoveTap: (index) => _removePhoto(index),
                                           ),
                                     const SizedBox(
                                       height: 20,
@@ -782,16 +783,18 @@ class _UserProfileState extends State<UserProfile> {
         experience = user!.experience ?? '';
       }
 
-      if (newlyUploadedList.isNotEmpty) {
-        //update sports videos first
-        newlyUploadedList.addAll(user!.uploadedSportsPhotos);
-        List<Map<String, dynamic>> uploadedFilesMap = newlyUploadedList
-            .map((uploadedFile) => uploadedFile.toMap())
-            .toList();
-
-        await userAuthService
-            .updateUserInfo(updatedMap: {uploadedFilesKey: uploadedFilesMap});
+      for (String item in _userUploadedSportsVideos) {
+        if (item.startsWith('https')) {
+          newlyUploadedList.add(user!.uploadedSportsPhotos.firstWhere((e) => e.url == item));
+        }
       }
+
+      List<Map<String, dynamic>> uploadedFilesMap = newlyUploadedList
+          .map((uploadedFile) => uploadedFile.toMap())
+          .toList();
+
+      await userAuthService
+          .updateUserInfo(updatedMap: {uploadedFilesKey: uploadedFilesMap});
 
       if (playerTypePickleBal && dupr != null) {
         _selectedPickleBallPlayerLevel = Utils.getPickleBallTypeFromDupr(dupr!);
@@ -942,5 +945,17 @@ class _UserProfileState extends State<UserProfile> {
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (ctx) => const SignInWithAccountsPage()),
         (route) => false);
+  }
+
+  void _removePhoto(int index) async {
+    ShowDialogs
+        .showDeletePhotoDialog(
+        context: context,
+        onDeleteTap: () {
+          setState(() {
+            _newlyUploadedFiles.removeWhere((e) => e.path == _userUploadedSportsVideos[index]);
+            _userUploadedSportsVideos.removeAt(index);
+          });
+        });
   }
 }

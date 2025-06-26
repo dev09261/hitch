@@ -75,3 +75,5 @@ const String facebookClientToken = 'e662ccb6b3cf64c3716b7f5adb084eae';
 
 const String privacyPolicyUrl = 'https://www.termsfeed.com/live/4a1f26bd-56ec-43dc-9d89-1950673f0a8a';
 const String termsOfUseUrl = 'https://www.privacypolicies.com/live/2460ac67-c1b5-4049-8a6d-518e3d0b5fd3';
+
+const String apolloAdUrl = 'https://www.apollopickleball.ca/discount/HitchPF';

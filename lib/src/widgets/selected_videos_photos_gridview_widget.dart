@@ -5,9 +5,10 @@ import 'package:hitch/src/widgets/app_cached_network_image.dart';
 import 'package:hitch/src/widgets/video_player_widget.dart';
 
 class SelectedVideosPhotosGridviewWidget extends StatelessWidget{
-  const SelectedVideosPhotosGridviewWidget({super.key, required this.selectedPhotosVideos, this.onTap});
+  const SelectedVideosPhotosGridviewWidget({super.key, required this.selectedPhotosVideos, this.onTap, this.onRemove});
   final List<String> selectedPhotosVideos;
   final Function(int index)? onTap;
+  final Function(int index)? onRemove;
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -22,20 +23,49 @@ class SelectedVideosPhotosGridviewWidget extends StatelessWidget{
           itemCount: selectedPhotosVideos.length,
           itemBuilder: (context, index) {
             String file = selectedPhotosVideos[index];
-            return GestureDetector(
-              onTap: () => onTap!(index),
-              child: (file.endsWith('.mp4') ||
-                      file.contains('.mp4') ||
-                      file.contains('.mov'))
-                  ? VideoPlayerWidget(
+            return Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    top: 6, right: 6
+                  ),
+                  child: GestureDetector(
+                    onTap: () => onTap!(index),
+                    child: (file.endsWith('.mp4') ||
+                        file.contains('.mp4') ||
+                        file.contains('.mov'))
+                        ? VideoPlayerWidget(
                       videoUrl: file,
                       isLocal: !file.startsWith('https'),
                     )
-                  : ClipRRect(
-                      borderRadius: BorderRadius.circular(5),
-                      child: file.startsWith('http')
-                          ? AppCachedNetworkImage(file: file)
-                          : Image.file(File(file))),
+                        : ClipRRect(
+                        borderRadius: BorderRadius.circular(5),
+                        child: file.startsWith('http')
+                            ? AppCachedNetworkImage(file: file)
+                            : Image.file(File(file))),
+                  ),
+                ),
+                if (onRemove != null)
+                Positioned(
+                  top: -2,
+                  right: -2,
+                  child: InkWell(
+                    onTap: () {
+                      onRemove!(index);
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: Icon(
+                        Icons.remove_circle_outlined,
+                        color: Colors.red[600],
+                      ),
+                    )
+                  ),
+                )
+              ],
             );
           },
         ),

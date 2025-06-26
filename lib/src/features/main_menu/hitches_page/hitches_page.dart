@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hitch/src/bloc_cubit/hitches_cubit/hitches_cubit.dart';
 import 'package:hitch/src/features/main_menu/hitches_page/empty_hitches_page.dart';
@@ -13,6 +14,7 @@ import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/hitches_service.dart';
 import 'package:hitch/src/utils/utils.dart';
+import 'package:hitch/src/widgets/ad_banner_video.dart';
 import 'package:hitch/src/widgets/failed_to_locate_widget.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
 import 'package:hitch/src/widgets/user_not_found.dart';
@@ -29,11 +31,12 @@ class HitchesPage extends StatefulWidget{
 
 class _HitchesPageState extends State<HitchesPage> {
   late UserModel currentUser;
-  bool loadingUser = false;
+  bool loadingUser = true;
   bool userNotFound = false;
   late HitchesCubit hitchesCubit;
   List<HitchesModel> hitchRequests = [];
   BannerAd? _bannerAd;
+  bool isCananda = false;
 
   @override
   void initState() {
@@ -56,8 +59,8 @@ class _HitchesPageState extends State<HitchesPage> {
   @override
   Widget build(BuildContext context) {
     hitchesCubit = BlocProvider.of<HitchesCubit>(context);
-    currentUser = Provider.of<LoggedInUserProvider>(context).getUser;
     final bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
+
     return
       loadingUser
         ? const LoadingWidget()
@@ -76,7 +79,15 @@ class _HitchesPageState extends State<HitchesPage> {
             return Padding(
               padding: const EdgeInsets.only(top: 10.0),
               child: Column(children: [
-                if (_bannerAd != null && !isSubscribed)
+                if (isCananda)
+                  Padding(padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: AdBannerVideo(user: currentUser,)
+                    ),
+                  ),
+
+                if (_bannerAd != null && !isSubscribed && !isCananda)
                   Padding(padding: const EdgeInsets.only(bottom: 20.0),
                     child: Align(
                       alignment: Alignment.topCenter,
@@ -122,6 +133,16 @@ class _HitchesPageState extends State<HitchesPage> {
 
   void _initUser() async{
     context.read<HitchesCubit>().checkLocPermission();
+    currentUser = context.read<LoggedInUserProvider>().getUser;
+
+    List<Placemark> placemarks = await placemarkFromCoordinates(currentUser.latitude!, currentUser.longitude!);
+    if (placemarks.first.country == 'Canada') {
+      isCananda = true;
+    }
+
+    setState(() {
+      loadingUser = false;
+    });
   }
 
   void _loadBannerAd(){

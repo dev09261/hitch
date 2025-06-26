@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
 import 'package:hitch/src/models/pending_hitches.dart';
@@ -9,6 +10,7 @@ import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
 import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
+import 'package:hitch/src/widgets/ad_video.dart';
 import 'package:provider/provider.dart';
 import '../bloc_cubit/players_coaches_cubit/players_coaches_cubit.dart';
 import '../helpers/ad_helper.dart';
@@ -29,6 +31,7 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
   bool _loadingPlayRequest = false;
 
   InterstitialAd? _interstitialAd;
+  final userAuthService = UserAuthService.instance;
 
   @override
   void initState() {
@@ -60,15 +63,29 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
     // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
     final isSubscribed = subscriptionProvider.getIsSubscribed;
 
-    if(!isSubscribed){
-      int _hitcherCount = await HitchesService.getAllHitchesCount();
-      if (_hitcherCount >= 5) {
-        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
-        return;
-      }
+    var user = await userAuthService.getCurrentUser();
 
-      if (_interstitialAd != null) {
-        await _interstitialAd!.show();
+    List<Placemark> placemarks = await placemarkFromCoordinates(user!.latitude!, user.longitude!);
+
+    if(!isSubscribed){
+      if (placemarks[0].country == 'Canada') {
+        await Navigator.push(context, MaterialPageRoute(builder: (context) => AdVideo(user: user,)));
+        if(!isSubscribed){
+          int _hitcherCount = await HitchesService.getAllHitchesCount();
+          if (_hitcherCount >= 5) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+            return;
+          }
+        }
+      } else {
+        int _hitcherCount = await HitchesService.getAllHitchesCount();
+        if (_hitcherCount >= 5) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+          return;
+        }
+        if (_interstitialAd != null) {
+          await _interstitialAd!.show();
+        }
       }
     }
 

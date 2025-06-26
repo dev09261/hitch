@@ -84,6 +84,7 @@ dependencies:
 #  launch_review_latest: ^1.0.0
   flutter_app_badge_control: ^0.0.2
   dio: ^5.7.0
+  graphql_flutter: ^5.1.2
 
 dev_dependencies:
   flutter_test:

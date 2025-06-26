@@ -130,7 +130,7 @@ class Utils {
     }
   }
 
-  static void launchAppUrl({required String url}) async {
+  static Future launchAppUrl({required String url}) async {
     Uri termsOfUse = Uri.parse(url);
     if(await canLaunchUrl(termsOfUse)){
       await launchUrl(termsOfUse);
