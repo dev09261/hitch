@@ -95,7 +95,12 @@ class ChatService {
     });
   }
 
-  static Future<Map<String, dynamic>> sendMessage({required String roomID, required String messageText})async {
+  static Future<Map<String, dynamic>> sendMessage({
+    required String roomID,
+    required String messageText,
+    String type = 'text',
+    String fileUrl = ''
+  })async {
      bool messageSent = false;
      String errorMessage = '';
 
@@ -104,6 +109,8 @@ class ChatService {
 
      MessagesModel message = MessagesModel(messageID: messageID,
         senderID: senderID,
+        type: type,
+        fileUrl: fileUrl,
         messageText: messageText,
         timestamp: Timestamp.now(),);
 
@@ -128,7 +135,12 @@ class ChatService {
     };
   }
 
-  static Future<Map<String, dynamic>> sendMessageInGroup({required String roomID, required String messageText})async {
+  static Future<Map<String, dynamic>> sendMessageInGroup({
+    required String roomID,
+    required String messageText,
+    String type = 'text',
+    String fileUrl = ''
+  })async {
     bool messageSent = false;
     String errorMessage = '';
 
@@ -137,6 +149,8 @@ class ChatService {
 
     MessagesModel message = MessagesModel(messageID: messageID,
       senderID: senderID,
+      type: type,
+      fileUrl: fileUrl,
       messageText: messageText,
       timestamp: Timestamp.now(),);
 

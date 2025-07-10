@@ -39,7 +39,7 @@ class PlayerInfoWidget extends StatelessWidget{
 
         const Spacer(),
         TextButton(onPressed: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> UserInfoPage(player: player)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> UserInfoPage(player: player.userID)));
         }, child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

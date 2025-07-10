@@ -4,6 +4,7 @@ import 'package:hitch/src/features/main_menu/events/add_event_page.dart';
 import 'package:hitch/src/features/main_menu/events/event_item_widget.dart';
 import 'package:hitch/src/models/event_model.dart';
 import 'package:hitch/src/models/pickleball_tournament_model.dart';
+import 'package:hitch/src/providers/event_provider.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
 import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/services/auth_service.dart';
@@ -33,6 +34,7 @@ class _EventsPageState extends State<EventsPage> {
   int page =1;
   int limit = 50;
   bool hasMore = true;
+  late EventProvider _eventProvider;
 
   @override
   void initState() {
@@ -44,60 +46,12 @@ class _EventsPageState extends State<EventsPage> {
   @override
   Widget build(BuildContext context) {
     bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
+    _eventProvider = Provider.of<EventProvider>(context);
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              StreamBuilder(
-                  stream: UserAuthService.instance.currentUserStream,
-                  builder: (ctx, snapshot){
-                    if(snapshot.hasData){
-                      UserModel user = snapshot.requireData;
-                      return InkWell(
-                          onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const UserProfile())),
-                          child: user.profilePicture.isNotEmpty
-                              ? HitchProfileImage(profileUrl: user.profilePicture, size: 45,)
-                              : const HitchProfileImage(profileUrl: '', size: 50, isCurrentUser: true,));
-                    }
-
-                    return CircleAvatar(
-                      radius: 25,
-                      backgroundColor: AppColors.primaryColor.withOpacity(0.2),
-                    );
-                  }),
-              const Text("Events", style: AppTextStyles.pageHeadingStyle,),
-
-              Padding(
-                padding: const EdgeInsets.only(right: 8.0),
-                child: IconButton(
-                    onPressed: ()async{
-                      if(isSubscribed){
-                        EventModel? event = await Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const AddEventPage()));
-                        if(event != null){
-                          _localEvents.insert(0,event);
-                          setState(() {});
-                        }
-                      }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=> const FilterSubscriptionPaywall()));
-                      }
-                    },
-                    icon: const Icon(
-                      Icons.add,
-                      size: 35,
-                      color: AppColors.primaryColor,
-                    )),
-              )
-            ],
-          ),
-          const SizedBox(height: 10,),
-          _loadingTournaments && page == 1
-              ? const Expanded(child: LoadingWidget(type: 'event',))
-              : _buildListView(),
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10.0),
+      child: _loadingTournaments && page == 1
+          ? const LoadingWidget(type: 'event',)
+          : _buildListView(),
     );
   }
 
@@ -149,11 +103,11 @@ class _EventsPageState extends State<EventsPage> {
     }
 
     if (combinedList.isEmpty) {
-      return const Expanded(child: LoadingWidget(type: 'event',));
+      return const LoadingWidget(type: 'event',);
     }
 
-    return Expanded(child: ListView.builder(
-      controller: _scrollController,
+    return  ListView.builder(
+        controller: _scrollController,
         itemCount: combinedList.length + (hasMore ? 1 : 0),
         itemBuilder: (ctx, index){
           if (index == combinedList.length) {
@@ -166,9 +120,9 @@ class _EventsPageState extends State<EventsPage> {
             Tournament tournament = item;
             return PickleBallTournamentItemWidget(tournament: tournament,);
           }else{
-            return EventItemWidget(event: item);
+            return EventItemWidget(event: item, eventProvider: _eventProvider,);
           }
-        }));
+        });
   }
 
   void _scrollListener() {

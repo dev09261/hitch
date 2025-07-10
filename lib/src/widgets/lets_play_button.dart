@@ -72,14 +72,14 @@ class _LetsPlayButtonState extends State<LetsPlayButton> {
         await Navigator.push(context, MaterialPageRoute(builder: (context) => AdVideo(user: user,)));
         if(!isSubscribed){
           int _hitcherCount = await HitchesService.getAllHitchesCount();
-          if (_hitcherCount >= 5) {
+          if (_hitcherCount >= 3) {
             Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
             return;
           }
         }
       } else {
         int _hitcherCount = await HitchesService.getAllHitchesCount();
-        if (_hitcherCount >= 5) {
+        if (_hitcherCount >= 3) {
           Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
           return;
         }

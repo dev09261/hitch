@@ -25,7 +25,7 @@ class SocialSignInWidget extends StatelessWidget{
           borderRadius: BorderRadius.circular(8),
           color: Colors.white
         ),
-        child:  isLoading ? const LoadingWidget() : Row(
+        child:  isLoading ? const LoadingWidget(isMoreLoading: true,) : Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.asset(icon, height: isWelcomePage ? 15 :25,),

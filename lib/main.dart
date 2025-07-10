@@ -15,8 +15,10 @@ import 'package:hitch/src/features/permissions_page.dart';
 import 'package:hitch/src/models/dupr_model.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
+import 'package:hitch/src/providers/event_provider.dart';
 import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
+import 'package:hitch/src/providers/post_provider.dart';
 import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/auth_service.dart';
@@ -58,6 +60,12 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => UserInfoCubit()),
         BlocProvider(create: (_) => CourtsCubit()),
         BlocProvider(create: (_) => HitchesCubit()),
+        ChangeNotifierProvider(
+          create: (context) => EventProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PostProvider(),
+        ),
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,

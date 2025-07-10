@@ -20,7 +20,6 @@ class PickleBallTournamentItemWidget extends StatelessWidget{
       },
       child: Container(
         decoration: BoxDecoration(
-
             color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: const [BoxShadow(blurRadius: 4, color: Colors.grey, spreadRadius: 1)],

@@ -19,7 +19,7 @@ import '../../widgets/selectable_available_days_widget.dart';
 
 class UserInfoPage extends StatefulWidget{
   const UserInfoPage({super.key, required this.player, this.comingForHitchRequest = false, this.hitchID = ''});
-  final UserModel player;
+  final String player;
   final bool comingForHitchRequest;
   final String hitchID;
 
@@ -55,7 +55,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: FutureBuilder(
-            future: UserAuthService.instance.getUserByID(userID: widget.player.userID),
+            future: UserAuthService.instance.getUserByID(userID: widget.player),
             builder: (context, snapshot) {
               if(snapshot.hasData && snapshot.requireData != null){
                 UserModel player = snapshot.requireData!;
@@ -123,7 +123,6 @@ class _UserInfoPageState extends State<UserInfoPage> {
                         padding: const EdgeInsets.only(left: 8.0, right: 20, bottom: 10),
                         child: AvailabilitySwitch(isAvailableDay: player.isAvailableDaily, onEveryDayChange: (val)=> null, onMorningChange: (val)=> null, isAvailableInMorning: player.isAvailableInMorning,),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(

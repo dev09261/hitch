@@ -67,7 +67,7 @@ class _HitchesItemWidgetState extends State<HitchesItemWidget> with SingleTicker
          ListTile(
            onTap: (){
              Navigator.of(context).push(MaterialPageRoute(
-                 builder: (ctx) => UserInfoPage(player: widget.hitchRequest.user, comingForHitchRequest: true, hitchID: widget.hitchRequest.hitchID,)));
+                 builder: (ctx) => UserInfoPage(player: widget.hitchRequest.user.userID, comingForHitchRequest: true, hitchID: widget.hitchRequest.hitchID,)));
            },
            contentPadding: const EdgeInsets.only(top: 5,bottom: 5, right: 10),
           leading: FutureBuilder(
@@ -79,8 +79,11 @@ class _HitchesItemWidgetState extends State<HitchesItemWidget> with SingleTicker
                   return SizedBox(
                     width: 100,
                     child: widget.hitchRequest.isRequestViewed
-                        ? HitchProfileImage(
-                        profileUrl: imageUrl, size: 50)
+                        ? Padding(
+                      padding: const EdgeInsets.only(left: 8),
+                      child: HitchProfileImage(
+                          profileUrl: imageUrl, size: 50),
+                    )
                         : Row(
                       children: [
                         const Padding(

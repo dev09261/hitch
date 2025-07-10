@@ -85,7 +85,7 @@ class _PlayersWidgetState extends State<PlayersWidget> {
                   return Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 0.0),
                         child: Row(
                           children: [
                             Expanded(
@@ -162,29 +162,15 @@ class _PlayersWidgetState extends State<PlayersWidget> {
                                   text: const TextSpan(
                                       children: [
                                         TextSpan(
-                                            text: "No ads? ",
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.darkGreyTextColor, fontFamily: 'Inter')
-                                        ),
-                                        TextSpan(
-                                            text: "Upgrade to ",
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.darkGreyTextColor, fontFamily: 'Inter')
-                                        ),
-                                        TextSpan(
-                                            text: "Hitch+",
-                                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.darkGreyTextColor, fontFamily: 'Inter')
+                                            text: "Need Lessons? Have local events?",
+                                            style: TextStyle(
+                                              decoration: TextDecoration.underline,
+                                                fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.darkGreyTextColor, fontFamily: 'Inter')
                                         ),
                                       ]
                                   ),
                                   textAlign: TextAlign.center,
                                 ),
-                                Container(
-                                  width: size.width*0.5,
-                                  height: 1,
-                                  decoration: const BoxDecoration(
-                                      color: AppColors.darkGreyTextColor
-                                  ),
-                                  margin: const EdgeInsets.only(top: 3),
-                                )
                               ],
                             ),
                             onTap: (){

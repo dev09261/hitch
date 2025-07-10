@@ -55,7 +55,7 @@ class _PlayersAndCoachesPageState extends State<PlayersAndCoachesPage> with Tick
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20,top: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -102,7 +102,7 @@ class _PlayersAndCoachesPageState extends State<PlayersAndCoachesPage> with Tick
                     tabAlignment: TabAlignment.center,
                     controller: _tabController,
                     tabs: _tabsTitle.map((tab) => Tab(text: tab,)).toList()),
-                const SizedBox(width: 20,),
+                const SizedBox(width: 30,),
               ],
             ),
           ),

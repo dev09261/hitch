@@ -84,7 +84,11 @@ class NotificationService {
 
   static Future<String?> notificationClickAction({required RemoteMessage message,}) async {
     try {
-      navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx)=> const MainMenuPage(comingFromNotification: true,)));
+      if (message.notification!.body!.contains('want to join!')) {
+        navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx)=> const MainMenuPage(comingFromNotification: 2,)));
+      } else {
+        navigatorKey.currentState?.push(MaterialPageRoute(builder: (ctx)=> const MainMenuPage(comingFromNotification: 3,)));
+      }
       return null;
     } catch (e) {
       return e.toString();
@@ -166,6 +170,42 @@ class NotificationService {
       notificationTitle = 'Hitch Play Request Accepted';
       notificationBody = '${sender.userName} accepted your Hitch request';
     }
+    String serverKey = await FirebaseServerKeyProvider.getServerKey();
+    var dataUpdated = {
+      "message":{
+        "token": receiver.token,
+        "notification":{
+          "body": notificationBody,
+          "title": notificationTitle
+        }
+      }
+    };
+
+    final String firebaseProjectAppID = dotenv.env['FIREBASE_PROJECT_ID']!;
+    await http.post(Uri.parse('https://fcm.googleapis.com/v1/projects/$firebaseProjectAppID/messages:send'),
+        body: jsonEncode(dataUpdated) ,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization' : 'Bearer $serverKey'
+        }
+    ).then((value){
+
+      if (kDebugMode) {
+        print("Notification sent response: ${value.body}");
+      }
+    }).onError((error, stackTrace){
+      if (kDebugMode) {
+        print(error);
+      }
+    });
+  }
+
+
+  static Future<void> sendRequestNotification({required UserModel receiver, required UserModel sender, required String title})async{
+
+    String notificationTitle = title;
+    String notificationBody = '${sender.userName} wants to join!';
+
     String serverKey = await FirebaseServerKeyProvider.getServerKey();
     var dataUpdated = {
       "message":{

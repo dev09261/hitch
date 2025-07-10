@@ -6,13 +6,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hitch/src/facebook_event_tracker/fb_event_tracker.dart';
 import 'package:hitch/src/features/authentication/sign_in_with_accounts_page.dart';
-import 'package:hitch/src/features/main_menu/events/events.dart';
+import 'package:hitch/src/features/main_menu/events/events_tab_menu_page.dart';
 import 'package:hitch/src/features/main_menu/hitches_page/hitches_tab_menu_page.dart';
 import 'package:hitch/src/features/main_menu/players_coaches_page.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/contacted_players_provider.dart';
+import 'package:hitch/src/providers/event_provider.dart';
 import 'package:hitch/src/providers/hitches_provider.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
+import 'package:hitch/src/providers/post_provider.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/services/auth_service.dart';
@@ -27,8 +29,8 @@ import 'in_app_purchase/in_app_purchase_config.dart';
 import 'main_menu/court_finder/court_finder_page.dart';
 
 class MainMenuPage extends StatefulWidget{
-   const MainMenuPage({super.key, this.comingFromNotification = false});
-   final bool comingFromNotification;
+   const MainMenuPage({super.key, this.comingFromNotification = 0});
+   final int comingFromNotification;
   @override
   State<MainMenuPage> createState() => _MainMenuPageState();
 }
@@ -42,7 +44,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
   final List<Widget> _pages = [
     const PlayersAndCoachesPage(),
     const CourtFinderPage(),
-    const EventsPage(),
+    const EventTabMenuPage(),
     const HitchesTabMenuPage(),
   ];
 
@@ -53,10 +55,9 @@ class _MainMenuPageState extends State<MainMenuPage> {
     super.initState();
     _initAppInfo();
     // Initialize background service
-
-    if(widget.comingFromNotification){
-      context.read<MainMenuTabChangeBloc>().add(TabChangeEvent(tabIndex: 3));
-    }
+    Provider.of<PostProvider>(context, listen: false).initPendingRequests();
+    Provider.of<EventProvider>(context, listen: false).initMyEventRequest();
+    context.read<MainMenuTabChangeBloc>().add(TabChangeEvent(tabIndex: widget.comingFromNotification));
   }
   
   @override
@@ -93,7 +94,54 @@ class _MainMenuPageState extends State<MainMenuPage> {
                 items: [
                   _buildBottomNavigationBarItem(state, icon: AppIcons.icPlayersCoaches, label: 'Players',  index: 0),
                   _buildBottomNavigationBarItem(state, icon: AppIcons.icTennisCourt, label: 'Courts', index: 1, isTennisCourt: true),
-                  _buildBottomNavigationBarItem(state, icon: AppIcons.icEvents, label: 'Events', unselectedColor: AppColors.navigationIconColor, index: 2,height: 40),
+                  BottomNavigationBarItem(icon: Builder(
+                    builder: (ctx){
+                      final _postProvider = Provider.of<PostProvider>(context);
+                      return Column(
+                        children: [
+                          Stack(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 8,
+                                  left: 4, right: 4
+                                ),
+                                child: SvgPicture.asset(
+                                  AppIcons.icEvents,
+                                  color: state.tabIndex == 2
+                                      ? AppColors.primaryColor
+                                      : AppColors.greyTextColor,
+                                  height: 40,
+                                ),
+                              ),
+                              if (_postProvider.eventRequests.isNotEmpty)
+                                const Positioned(
+                                  top: 4,
+                                  left: -2,
+                                  child: Icon(
+                                    Icons.circle,
+                                    size: 20,
+                                    color: AppColors.primaryColor,
+                                  ),
+                                )
+                            ],
+                          ),
+                          const SizedBox(height: 5,),
+
+                          Text(
+                            'Events',
+                            style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                                color: state.tabIndex == 2
+                                    ? AppColors.primaryColor
+                                    : AppColors.navigationIconColor),
+                          )
+                        ],
+                      );
+                    },
+                  ), label: ''),
+
                   BottomNavigationBarItem(icon: FutureBuilder(
                     future: HitchesService.getPendingAndUnReadCount(),
                     builder: (ctx, snapshot){
@@ -101,6 +149,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                         bool isPendingRequestNotEmpty = snapshot.requireData > 0;
                         return Column(
                           children: [
+                            const SizedBox(height: 8,),
                             isPendingRequestNotEmpty
                                 ? SvgPicture.asset(AppIcons.icHitchesGreenNotSelected, color: state.tabIndex == 3
                                 ? AppColors.primaryColor

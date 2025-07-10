@@ -77,7 +77,7 @@ class _HitchesPageState extends State<HitchesPage> {
               return FailedToLocateUserWidget(onRefreshTap: () => hitchesCubit.checkLocPermission());
             }
             return Padding(
-              padding: const EdgeInsets.only(top: 10.0),
+              padding: const EdgeInsets.only(top: 0.0),
               child: Column(children: [
                 if (isCananda)
                   Padding(padding: const EdgeInsets.only(bottom: 20.0),

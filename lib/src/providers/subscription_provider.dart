@@ -24,7 +24,6 @@ class SubscriptionProvider with ChangeNotifier{
     notifyListeners();
   }
 
-
   Future<void> _initializePurchases() async {
     Purchases.addCustomerInfoUpdateListener((customerInfo) {
       // Check if the customer has any active entitlements

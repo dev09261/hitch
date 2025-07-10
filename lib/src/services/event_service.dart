@@ -193,9 +193,9 @@ query GetTournaments(
     myTournaments: $myTournaments
     mtManaging: $mtManaging
     mtPast: $mtPast
+    tournamentFilter: $tournamentFilter
     pastEvents: $pastEvents
     partner: $partner
-    tournamentFilter: $tournamentFilter
     startDate: $startDate
     requesterUuid: $requesterUuid
   ) {
@@ -231,10 +231,17 @@ query GetTournaments(
 }
 ''';
 
+    var bounds = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 50);
+
     final Map<String, dynamic> payload = {
       "operationName": "GetTournaments",
       "variables": {
-        "bounds": null,
+        "bounds": {
+          "ne_lat": bounds.maxLat,
+          "ne_lng": bounds.maxLng,
+          "sw_lat": bounds.minLat,
+          "sw_lng": bounds.minLng,
+        },
         "keyword": null,
         "limit": limit,
         "center": {"lat": currentUser.latitude!, "lng": currentUser.longitude},
@@ -247,12 +254,12 @@ query GetTournaments(
         "myTournaments": false,
         "mtManaging": false,
         "mtPast": false,
-        "userLocationFetch": true,
+        "userLocationFetch": false,
         "userId": null,
         "startDate": null,
-        "tournamentFilter": "local",
         "endDate": null,
         "partner": null,
+        "tournamentFilter": null,
         "requesterUuid": null,
       },
       "query": getTournamentsQuery,
@@ -313,6 +320,10 @@ query GetTournaments(
         .collection(eventsCollection)
         .where('createdByUserID', whereIn: myHitchesIds)
         .where('isForEveryOne', isEqualTo: false)
+        .where('eventDate',
+        isGreaterThan: DateTime.now()
+            .subtract(const Duration(days: 1))
+            .millisecondsSinceEpoch)
         .get();
 
     events = querySnapshot.docs
@@ -329,6 +340,10 @@ query GetTournaments(
           .where('longitude', isGreaterThanOrEqualTo: box.minLng)
           .where('longitude', isLessThanOrEqualTo: box.maxLng)
           .where('isForEveryOne', isEqualTo: true)
+          .where('eventDate',
+          isGreaterThan: DateTime.now()
+              .subtract(const Duration(days: 1))
+              .millisecondsSinceEpoch)
           .get();
 
       for (var doc in querySnapshot.docs) {
@@ -337,7 +352,6 @@ query GetTournaments(
         events.add(event);
       }
     }
-    events.removeWhere((event) => event.eventDate.isBefore(DateTime.now()));
     events.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return events;
   }

@@ -38,7 +38,7 @@ class _ContactTypeSmsWidgetState extends State<ContactTypeSmsWidget> {
     return GestureDetector(
         onTap: _onChatTap,
         child: _checkingIfChatExists
-            ? const SizedBox(width: 25, child: LoadingWidget())
+            ? const  LoadingWidget(isMoreLoading: true,)
             : chat != null
             ? StreamBuilder(
             stream: ChatService.getUnReadMessagesCount(

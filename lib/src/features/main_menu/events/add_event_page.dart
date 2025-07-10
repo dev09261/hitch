@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hitch/src/models/event_model.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
+import 'package:hitch/src/providers/post_provider.dart';
 import 'package:hitch/src/res/string_constants.dart';
 import 'package:hitch/src/services/event_service.dart';
 import 'package:hitch/src/widgets/app_textfield.dart';
@@ -190,6 +191,7 @@ class _AddEventPageState extends State<AddEventPage> {
           isForEveryOne: selectedEvent == eventTypeEveryone);
      Utils.showCopyToastMessage(message: 'Event created successfully');
      _onPopup(event);
+     Provider.of<PostProvider>(context, listen: false).getActiveEvents();
     }catch(e){
       debugPrint("Could not create event: ${e.toString()}");
     }

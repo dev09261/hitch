@@ -11,6 +11,7 @@ import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/services/app_icon_badger_service.dart';
 import 'package:hitch/src/services/chat_service.dart';
 import 'package:hitch/src/utils/show_snackbars.dart';
+import 'package:hitch/src/widgets/chat_image_add.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
 
 class GroupChatMessagesPage extends StatefulWidget{
@@ -124,6 +125,22 @@ class _GroupChatMessagesPageState extends State<GroupChatMessagesPage> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  ChatImageAdd(
+                    onSubmit: (String? url) async {
+                      if (url == null || url.isEmpty) {
+                        return;
+                      }
+                      final map = await ChatService.sendMessageInGroup(roomID: widget.chat.chatID,
+                          messageText: 'Shared an Image',
+                          type: 'image',
+                          fileUrl: url
+                      );
+                      if(!map['status']){
+                        _showErrorSnackBar(map);
+                      }
+
+                    },
+                  ),
                   Expanded(
                     child: TextField(
                       maxLines: null,

@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hitch/src/features/group_chat/create_group_chat_page.dart';
-import 'package:hitch/src/features/main_menu/hitches_page/hitches_groups_page.dart';
-import 'package:hitch/src/features/main_menu/hitches_page/hitches_page.dart';
+import 'package:hitch/src/features/main_menu/events/add_event_page.dart';
+import 'package:hitch/src/features/main_menu/events/events.dart';
+import 'package:hitch/src/features/main_menu/events/posts_page.dart';
 import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
 import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:provider/provider.dart';
@@ -16,19 +16,19 @@ import '../../../widgets/hitch_profile_image.dart';
 import '../../authentication/sign_in_with_accounts_page.dart';
 import '../../user_profile/user_profile.dart';
 
-class HitchesTabMenuPage extends StatefulWidget{
-  const HitchesTabMenuPage({super.key});
+class EventTabMenuPage extends StatefulWidget{
+  const EventTabMenuPage({super.key});
 
   @override
-  State<HitchesTabMenuPage> createState() => _HitchesTabMenuPageState();
+  State<EventTabMenuPage> createState() => _EventTabMenuPageState();
 }
 
-class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProviderStateMixin{
+class _EventTabMenuPageState extends State<EventTabMenuPage> with TickerProviderStateMixin{
   late TabController _tabController;
 
   final List<String> _tabsTitle  = [
-    'Hitches',
-    'Groups'
+    'Events',
+    'Posts'
   ];
   int selectedTab = 0;
   late Stream<DocumentSnapshot> userDocSnapshot;
@@ -129,7 +129,7 @@ class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProv
                           // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
                           final isSubscribed = subscriptionProvider.getIsSubscribed;
                           if (isSubscribed) {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const CreateGroupChatPage()));
+                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddEventPage()));
                           } else {
                             Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
                           }
@@ -151,8 +151,8 @@ class _HitchesTabMenuPageState extends State<HitchesTabMenuPage> with TickerProv
               child: TabBarView(
                 controller: _tabController,
                 children:  const [
-                  HitchesPage(),
-                  HitchesGroupsPage()
+                  EventsPage(),
+                  PostsPage()
                 ],
               ))
         ],

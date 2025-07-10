@@ -28,7 +28,7 @@ class EventModel {
     return {
       'eventID': eventID,
       'createdAt': createdAt.toIso8601String(),
-      'eventDate': eventDate.toIso8601String(),
+      'eventDate': eventDate.millisecondsSinceEpoch,
       'title': title,
       'description': description,
       'eventImageUrl': eventImageUrl,
@@ -44,7 +44,7 @@ class EventModel {
     return EventModel(
       eventID: map['eventID'] ?? '',
       createdAt: DateTime.tryParse(map['createdAt'] ?? '') ?? DateTime.now(),
-      eventDate: DateTime.tryParse(map['eventDate'] ?? '') ?? DateTime.now(),
+      eventDate: DateTime.fromMillisecondsSinceEpoch(map['eventDate'] ?? DateTime.now().millisecondsSinceEpoch),
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       eventImageUrl: map['eventImageUrl'] ?? '',
