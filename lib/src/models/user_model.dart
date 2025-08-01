@@ -21,6 +21,7 @@ class UserModel {
   double distanceFromCurrentLocation;
   final String token;
   List<String> requestSentToUserIDs;
+  List<String> hiddenIds;
   List<String> requestReceivedFromUserIDs;
   String? gender;
   final bool isReviewed;
@@ -64,6 +65,7 @@ class UserModel {
       this.token = '',
       this.experience,
       this.requestReceivedFromUserIDs = const [],
+      this.hiddenIds = const [],
       this.declinedRequestsUserIDs = const [],
       this.requestSentToUserIDs = const [],
       this.coachPickleBallExperienceLevel,
@@ -102,6 +104,7 @@ class UserModel {
       'token': token,
       'distanceFromCurrentLocation': distanceFromCurrentLocation,
       'requestSentToUserIDs': requestSentToUserIDs,
+      'hiddenIds': hiddenIds,
       'requestReceivedFromUserIDs': requestReceivedFromUserIDs,
       'declinedRequestsUserIDs': requestReceivedFromUserIDs,
       // 'languages' : languages,
@@ -152,6 +155,8 @@ class UserModel {
             : map['distanceFromCurrentLocation'],
         requestSentToUserIDs:
             List<String>.from(map['requestSentToUserIDs'] ?? []),
+        hiddenIds:
+        List<String>.from(map['hiddenIds'] ?? []),
         declinedRequestsUserIDs:
             List<String>.from(map['declinedRequestsUserIDs'] ?? []),
         // languages: List<String>.from(map['languages'] ?? []),

@@ -10,6 +10,7 @@ import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/services/app_icon_badger_service.dart';
 import 'package:hitch/src/services/chat_service.dart';
 import 'package:hitch/src/utils/show_snackbars.dart';
+import 'package:hitch/src/widgets/chat_gif_add.dart';
 import 'package:hitch/src/widgets/chat_image_add.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
 
@@ -96,6 +97,21 @@ class _ChatMessagesPageState extends State<ChatMessagesPage> {
                       final map = await ChatService.sendMessage(roomID: widget.chat.roomID, messageText: 'Shared an Image',
                         type: 'image',
                         fileUrl: url
+                      );
+                      if(!map['status']){
+                        _showErrorSnackBar(map);
+                      }
+
+                    },
+                  ),
+                  ChatGifAdd(
+                    onSubmit: (String? url) async {
+                      if (url == null || url.isEmpty) {
+                        return;
+                      }
+                      final map = await ChatService.sendMessage(roomID: widget.chat.roomID, messageText: 'Shared an Image',
+                          type: 'image',
+                          fileUrl: url
                       );
                       if(!map['status']){
                         _showErrorSnackBar(map);

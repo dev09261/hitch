@@ -16,7 +16,7 @@ class EmptyHitchesPage extends StatelessWidget{
           children: [
             const Text("No Hitches", style: TextStyle(fontSize: 21, color: AppColors.darkGreyTextColor),),
             const SizedBox(height: 10,),
-            SvgPicture.asset(AppIcons.icHitchesDefault),
+            SvgPicture.asset(AppIcons.navIcons[3]['off']!),
             const SizedBox(height: 10,),
             RichText(
                 textAlign: TextAlign.center,

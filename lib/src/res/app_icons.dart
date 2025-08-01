@@ -5,8 +5,6 @@ class AppIcons{
   static const icAddProfile = 'assets/icons/add_profile.png';
   static const icGoogle = 'assets/icons/ic_google.svg';
   static const icApple = 'assets/icons/ic_apple.svg';
-  static const icTennisCourt = 'assets/icons/tennis_court.png';
-  static const icPlayersCoaches = 'assets/icons/ic_friends_coaches.svg';
   static const icUserProfile = 'assets/icons/user_profile.svg';
   static const icFilter ='assets/icons/ic_filter.svg';
   static const icMessage ='assets/icons/ic_message.png';
@@ -38,7 +36,11 @@ class AppIcons{
   static const icHitchChatPaywall = 'assets/icons/ic_hitch_chat_paywall.png';
   static const icPremiumUserMockup = 'assets/icons/ic_premium_user_mockup.png';
   static const icHitchLogo = 'assets/icons/ic_hitch_logo.png';
-  static const icEvents = 'assets/icons/ic_events.svg';
   static const icPicklrLogo = 'assets/icons/ic_picklr_logo.png';
-  static const icHitchesDefault = 'assets/icons/ic_hitches_default.svg';
+  static const navIcons = [
+    {'on': 'assets/nav/players-on.svg', 'off': 'assets/nav/players-off.svg'},
+    {'on': 'assets/nav/calendar-on.svg', 'off': 'assets/nav/calendar-off.svg'},
+    {'on': 'assets/nav/court-on.svg', 'off': 'assets/nav/court-off.svg'},
+    {'on': 'assets/nav/hitches-on.svg', 'off': 'assets/nav/hitches-off.svg'},
+  ];
 }

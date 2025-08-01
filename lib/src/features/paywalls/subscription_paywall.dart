@@ -75,7 +75,7 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
                     const SizedBox(
                       height: 20,
                     ),
-                    _buildWhyUpgradeNoteWidget(text: 'Unlimited player connections (Hitches)'),
+                    _buildWhyUpgradeNoteWidget(text: 'Unlimited player connections (Free accounts are limited to 3)'),
                     const SizedBox(
                       height: 15,
                     ),
@@ -83,16 +83,11 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
                     const SizedBox(
                       height: 15,
                     ),
-                    _buildWhyUpgradeNoteWidget(text: 'Get access to coaches'),
+                    _buildWhyUpgradeNoteWidget(text: 'Court finder'),
                     const SizedBox(
                       height: 15,
                     ),
                     _buildWhyUpgradeNoteWidget(text: 'No ads'),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    _buildWhyUpgradeNoteWidget(
-                        text: 'Post your own local event(s)'),
                     const SizedBox(
                       height: 30,
                     ),
@@ -309,7 +304,7 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
                           height: 5,
                         ),
                         Text(
-                          '${_getAnnualPackage?.storeProduct.priceString}/yr (save \$5)',
+                          '${_getAnnualPackage?.storeProduct.priceString}/yr (\$18 savings)',
                           style: const TextStyle(
                               fontSize: 17, fontStyle: FontStyle.italic),
                         )
@@ -339,7 +334,7 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
                 RichText(
                     text: const TextSpan(children: [
                   TextSpan(
-                      text: "33% OFF ",
+                      text: "25% OFF ",
                       style: TextStyle(
                           fontSize: 20,
                           fontFamily: 'Inter',

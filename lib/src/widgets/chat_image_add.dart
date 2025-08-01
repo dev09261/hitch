@@ -21,26 +21,26 @@ class _ChatImageAddState extends State<ChatImageAdd> {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        IconButton(
-            onPressed: () async {
-              XFile? selectedMedia = await imagePicker.pickImage(
-                  source: ImageSource.gallery, maxWidth: 300);
-              if (selectedMedia != null) {
-                showDialog(
-                    context: context,
-                    builder: (context) => ImageDialog(
-                          image: selectedMedia,
-                          onSubmit: widget.onSubmit,
-                        ));
-              }
-            },
-            icon: const Icon(
-              Icons.add_photo_alternate_outlined,
-              size: 26,
-            )),
-        const SizedBox(
-          width: 6,
-        ),
+        SizedBox(
+          width: 42,
+          child: IconButton(
+              onPressed: () async {
+                XFile? selectedMedia = await imagePicker.pickImage(
+                    source: ImageSource.gallery, maxWidth: 300);
+                if (selectedMedia != null) {
+                  showDialog(
+                      context: context,
+                      builder: (context) => ImageDialog(
+                        image: selectedMedia,
+                        onSubmit: widget.onSubmit,
+                      ));
+                }
+              },
+              icon: const Icon(
+                Icons.add_photo_alternate_outlined,
+                size: 38,
+              )),
+        )
       ],
     );
   }

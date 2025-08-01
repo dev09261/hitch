@@ -5,9 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hitch/src/bloc_cubit/courts_cubit/courts_cubit.dart';
+import 'package:hitch/src/features/paywalls/subscription_paywall.dart';
 import 'package:hitch/src/features/user_profile/user_profile.dart';
 import 'package:hitch/src/models/places_api_response_model.dart';
 import 'package:hitch/src/models/user_model.dart';
+import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/res/app_icons.dart';
 import 'package:hitch/src/res/app_text_styles.dart';
@@ -23,6 +25,7 @@ import 'package:hitch/src/widgets/hitch_profile_image.dart';
 import 'package:hitch/src/widgets/loading_widget.dart';
 import 'package:hitch/src/widgets/lottie_anim_widget.dart';
 import 'package:hitch/src/widgets/primary_btn.dart';
+import 'package:provider/provider.dart';
 import '../../../models/sponsored_club_model.dart';
 import '../../../widgets/user_not_found.dart';
 import '../../filter_page.dart';
@@ -58,6 +61,11 @@ class _CourtFinderPageState extends State<CourtFinderPage> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+    final _subscriptionProvider = Provider.of<SubscriptionProvider>(context);
+
+    if (!_subscriptionProvider.getIsSubscribed)
+      return SubscriptionPaywall();
+
     return BlocConsumer<CourtsCubit, CourtsStates>(
         listener: (ctx, state){
           if(state is LocationPermissionDeniedForever){

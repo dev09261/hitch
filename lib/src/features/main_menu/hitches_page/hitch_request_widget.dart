@@ -2,13 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hitch/src/bloc_cubit/players_coaches_cubit/players_coaches_cubit.dart';
+import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
+import 'package:hitch/src/helpers/ad_helper.dart';
 import 'package:hitch/src/models/hitches_model.dart';
 import 'package:hitch/src/models/pending_hitches.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/providers/logged_in_user_provider.dart';
+import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/services/auth_service.dart';
+import 'package:hitch/src/widgets/ad_video.dart';
+import 'package:provider/provider.dart';
 
 import '../../../notifications/notification_service.dart';
 import '../../../res/string_constants.dart';
@@ -26,6 +33,14 @@ class HitchRequestStatusWidget extends StatefulWidget{
 }
 
 class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
+  final userAuthService = UserAuthService.instance;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +62,20 @@ class _HitchRequestStatusWidgetState extends State<HitchRequestStatusWidget> {
             width: 150,
             child: ElevatedButton(
               onPressed: () async{
+
+                final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
+
+                // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
+                final isSubscribed = subscriptionProvider.getIsSubscribed;
+
+                if (!isSubscribed) {
+                  int _hitcherCount = await HitchesService.getAllHitchesCount();
+                  if (_hitcherCount >= 3) {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+                    return;
+                  }
+                }
+
                 await HitchesService
                     .onAcceptRejectHitchTap(
                   context: context,

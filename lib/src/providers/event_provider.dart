@@ -64,4 +64,13 @@ class EventProvider with ChangeNotifier {
       NotificationService.sendRequestNotification(receiver: creator,  sender: currentUser, title: event.title);
     }
   }
+
+  Future<int> getTotalMyEventRequestCount() async {
+    String currentUID = FirebaseAuth.instance.currentUser!.uid;
+    try {
+      return (await _eventRequestsRef.where('requestUserId', isEqualTo: currentUID).count().get()).count ?? 0;
+    } catch (e) {
+      return 0;
+    }
+  }
 }

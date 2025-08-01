@@ -26,6 +26,8 @@ class PlayersCoachesService {
         return user;
       }).toList();
 
+      players.removeWhere((item) => item.hiddenIds.contains(user.userID));
+
       if (user.playerTypeCoach) {
         return _getPlayersOfSimilarMatchGenderType(
             players: players, currentUser: user);

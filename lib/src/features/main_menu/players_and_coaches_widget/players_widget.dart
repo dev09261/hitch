@@ -123,6 +123,7 @@ class _PlayersWidgetState extends State<PlayersWidget> {
                       ))
                           : Expanded(
                             child: CarouselSlider(
+                            carouselController: playersCoachesCubit.carouselCtrl,
                             options: CarouselOptions(
                             height: size.height*0.7,
                             aspectRatio: 16/9,
@@ -162,7 +163,7 @@ class _PlayersWidgetState extends State<PlayersWidget> {
                                   text: const TextSpan(
                                       children: [
                                         TextSpan(
-                                            text: "Need Lessons? Have local events?",
+                                            text: "Hitch+: Expand your player network",
                                             style: TextStyle(
                                               decoration: TextDecoration.underline,
                                                 fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.darkGreyTextColor, fontFamily: 'Inter')

@@ -52,9 +52,9 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
-        targetSdkVersion 34
-        versionCode 61
-        versionName "2.2.12"
+        targetSdkVersion 35
+        versionCode 62
+        versionName "2.2.13"
         multiDexEnabled true
         manifestPlaceholders += [appAuthRedirectScheme: "com.willparton.hitch"]
 

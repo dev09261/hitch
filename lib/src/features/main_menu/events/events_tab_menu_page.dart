@@ -124,15 +124,7 @@ class _EventTabMenuPageState extends State<EventTabMenuPage> with TickerProvider
                         onPressed: selectedTab == 0
                             ? null
                             : () {
-                          final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
-
-                          // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
-                          final isSubscribed = subscriptionProvider.getIsSubscribed;
-                          if (isSubscribed) {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddEventPage()));
-                          } else {
-                            Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
-                          }
+                          Navigator.of(context).push(MaterialPageRoute(builder: (ctx) => const AddEventPage()));
                         },
                         icon: Icon(
                           Icons.add,

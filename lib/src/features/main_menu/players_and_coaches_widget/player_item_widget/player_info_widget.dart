@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hitch/src/bloc_cubit/players_coaches_cubit/players_coaches_cubit.dart';
 import 'package:hitch/src/features/main_menu/hitches_page/hitch_request_widget.dart';
 import 'package:hitch/src/models/user_model.dart';
 import 'package:hitch/src/widgets/lets_play_button.dart';
+import 'package:hitch/src/widgets/primary_btn.dart';
+import 'package:hitch/src/widgets/secondary_btn.dart';
 
 import '../../../../models/hitches_model.dart';
 import '../../../../res/app_colors.dart';
@@ -67,7 +71,25 @@ class PlayerInfoWidget extends StatelessWidget{
             }
 
             //Lets Play Button Here
-            return LetsPlayButton(player: player);
+            if (player.playerTypeCoach)
+              return LetsPlayButton(player: player);
+
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                    width: 80,
+                    child: SecondaryBtn(btnText: 'Hide', onTap: () {
+                      HitchesService.addHideUser(hider: player);
+                      final playersCoachesCubit = context.read<PlayersCoachesCubit>();
+                      playersCoachesCubit.carouselCtrl.jumpToPage(0);
+                })),
+                const SizedBox(width: 10,),
+                SizedBox(
+                    width: 130,
+                    child: LetsPlayButton(player: player)),
+              ],
+            );
           }),
         ),
         const Spacer(),

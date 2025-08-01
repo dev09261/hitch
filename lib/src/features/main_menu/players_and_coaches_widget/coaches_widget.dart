@@ -50,8 +50,6 @@ class _CoachesWidgetState extends State<CoachesWidget> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     playersCoachesCubit = BlocProvider.of<PlayersCoachesCubit>(context);
-    bool isSubscribed = Provider.of<SubscriptionProvider>(context).getIsSubscribed;
-    debugPrint("isSubscribed: $isSubscribed");
     return Stack(
       children: [
         StreamBuilder(stream: PlayersCoachesService().getCoaches(), builder: (ctx,snapshot){
@@ -105,9 +103,7 @@ class _CoachesWidgetState extends State<CoachesWidget> {
                   ),
                 ),
                 Expanded(
-                    child: isSubscribed
-                        ? _buildCoachesWidget(coachesMap: coachesMap, size: size)
-                        :  const SubscriptionPaywall(),
+                    child: _buildCoachesWidget(coachesMap: coachesMap, size: size)
                 ),
               ],
             );

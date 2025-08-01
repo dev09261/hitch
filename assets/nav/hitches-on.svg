@@ -1,0 +1,13 @@
+<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="11.5" cy="20.5" r="7.5" fill="#90B953" stroke="#90B953" stroke-width="2"/>
+<path d="M28.5 6C31.6144 6 34 8.31243 34 11C34 13.6876 31.6144 16 28.5 16C25.3856 16 23 13.6876 23 11C23 8.31243 25.3856 6 28.5 6Z" fill="#90B953" stroke="#90B953" stroke-width="2"/>
+<circle cx="31" cy="29" r="9" fill="#90B953" stroke="#90B953" stroke-width="2"/>
+<rect x="0.265658" y="0.653933" width="2.97225" height="1.2119" transform="matrix(0.921946 0.387319 -0.39063 0.920548 19.1649 22.9989)" fill="#90B953" stroke="#90B953"/>
+<rect x="0.682347" y="0.191168" width="5.11144" height="1.21289" transform="matrix(0.872697 -0.488262 0.491997 0.870597 18.0026 15.9438)" fill="#90B953" stroke="#90B953"/>
+<ellipse cx="11.5" cy="17" rx="2.5" ry="2" fill="white"/>
+<circle cx="30.5" cy="25.5" r="2.5" fill="white"/>
+<ellipse cx="31" cy="32.5" rx="6" ry="3.5" fill="white"/>
+<ellipse cx="11.5" cy="23" rx="4.5" ry="3" fill="white"/>
+<ellipse cx="28.5" cy="13" rx="3.5" ry="2" fill="white"/>
+<circle cx="28.5" cy="8.5" r="1.5" fill="white"/>
+</svg>

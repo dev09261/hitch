@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hitch/src/models/user_model.dart';
@@ -8,6 +9,8 @@ part 'players_coaches_states.dart';
 
 class PlayersCoachesCubit extends Cubit<PlayersCoachesState>{
   PlayersCoachesCubit() : super(InitialPlayersState());
+
+  CarouselSliderController carouselCtrl = CarouselSliderController();
 
   void onShowLetsPlayAnim(){
     emit(ShowLetsPlayAnim());

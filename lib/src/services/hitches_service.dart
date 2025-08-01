@@ -55,6 +55,18 @@ class HitchesService{
 
   }
 
+  static Future<void> addHideUser({required UserModel hider}) async{
+    final userColRef = FirebaseFirestore.instance.collection(userCollection);
+    String? currentId = FirebaseAuth.instance.currentUser?.uid;
+    if (currentId != null) {
+      hider.hiddenIds.add(currentId);
+      await userColRef.doc(hider.userID).update({
+        'hiddenIds': hider.hiddenIds,
+        'latitude': hider.latitude! + 0.0000001
+      });
+    }
+  }
+
   static Future<void> onAcceptRejectHitchTap({required BuildContext context, required HitchesModel hitchRequest, required String hitchStatus})async{
    context.read<HitchesProvider>().addUserToHitch(hitchRequest.user.userID);
     String currentUID = FirebaseAuth.instance.currentUser!.uid;

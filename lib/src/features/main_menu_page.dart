@@ -43,8 +43,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
   
   final List<Widget> _pages = [
     const PlayersAndCoachesPage(),
-    const CourtFinderPage(),
     const EventTabMenuPage(),
+    const CourtFinderPage(),
     const HitchesTabMenuPage(),
   ];
 
@@ -92,8 +92,7 @@ class _MainMenuPageState extends State<MainMenuPage> {
                 backgroundColor: Colors.white,
                 type: BottomNavigationBarType.fixed,
                 items: [
-                  _buildBottomNavigationBarItem(state, icon: AppIcons.icPlayersCoaches, label: 'Players',  index: 0),
-                  _buildBottomNavigationBarItem(state, icon: AppIcons.icTennisCourt, label: 'Courts', index: 1, isTennisCourt: true),
+                  _buildBottomNavigationBarItem(state, label: 'Players',  index: 0),
                   BottomNavigationBarItem(icon: Builder(
                     builder: (ctx){
                       final _postProvider = Provider.of<PostProvider>(context);
@@ -103,14 +102,13 @@ class _MainMenuPageState extends State<MainMenuPage> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.only(
-                                  top: 8,
-                                  left: 4, right: 4
+                                    top: 8,
+                                    left: 4, right: 4
                                 ),
                                 child: SvgPicture.asset(
-                                  AppIcons.icEvents,
-                                  color: state.tabIndex == 2
-                                      ? AppColors.primaryColor
-                                      : AppColors.greyTextColor,
+                                  state.tabIndex == 1 ?
+                                  AppIcons.navIcons[1]['on']!:
+                                  AppIcons.navIcons[1]['off']!,
                                   height: 40,
                                 ),
                               ),
@@ -126,14 +124,12 @@ class _MainMenuPageState extends State<MainMenuPage> {
                                 )
                             ],
                           ),
-                          const SizedBox(height: 5,),
-
                           Text(
                             'Events',
                             style: TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
-                                color: state.tabIndex == 2
+                                color: state.tabIndex == 1
                                     ? AppColors.primaryColor
                                     : AppColors.navigationIconColor),
                           )
@@ -142,6 +138,8 @@ class _MainMenuPageState extends State<MainMenuPage> {
                     },
                   ), label: ''),
 
+                  _buildBottomNavigationBarItem(state, label: 'Courts', index: 2,),
+
                   BottomNavigationBarItem(icon: FutureBuilder(
                     future: HitchesService.getPendingAndUnReadCount(),
                     builder: (ctx, snapshot){
@@ -149,37 +147,49 @@ class _MainMenuPageState extends State<MainMenuPage> {
                         bool isPendingRequestNotEmpty = snapshot.requireData > 0;
                         return Column(
                           children: [
-                            const SizedBox(height: 8,),
-                            isPendingRequestNotEmpty
-                                ? SvgPicture.asset(AppIcons.icHitchesGreenNotSelected, color: state.tabIndex == 3
-                                ? AppColors.primaryColor
-                                : null) : SvgPicture.asset(
-                                              AppIcons.icHitchesDefault,
-                                              color: state.tabIndex == 3
-                                                  ? AppColors.primaryColor
-                                                  : AppColors.greyTextColor,
-                                              height: 40,
-                                            ),
-                                      const SizedBox(height: 5,),
-
-                                      Text(
-                                        'Hitches',
-                                        style: TextStyle(
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            color: state.tabIndex == 3
-                                                ? AppColors.primaryColor
-                                                : AppColors.navigationIconColor),
-                                      )
-                                    ],
+                            Stack(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8,
+                                      left: 4, right: 4
+                                  ),
+                                  child: SvgPicture.asset(
+                                    state.tabIndex == 3 ?
+                                    AppIcons.navIcons[3]['on']!:
+                                    AppIcons.navIcons[3]['off']!,
+                                    height: 40,
+                                  ),
+                                ),
+                                if (isPendingRequestNotEmpty)
+                                  const Positioned(
+                                    top: 4,
+                                    left: -2,
+                                    child: Icon(
+                                      Icons.circle,
+                                      size: 20,
+                                      color: AppColors.primaryColor,
+                                    ),
+                                  )
+                              ],
+                            ),
+                            Text(
+                              'Hithces',
+                              style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                  color: state.tabIndex == 3
+                                      ? AppColors.primaryColor
+                                      : AppColors.navigationIconColor),
+                            )
+                          ],
                         );
                       }
 
                                 return SvgPicture.asset(
-                                  AppIcons.icHitchesDefault,
-                                  color: state.tabIndex == 3
-                                      ? AppColors.primaryColor
-                                      : AppColors.greyTextColor,
+                                  state.tabIndex == 3 ?
+                                  AppIcons.navIcons[3]['on']!:
+                                  AppIcons.navIcons[3]['off']!,
                                   height: 40,
                                 );
                               },
@@ -202,27 +212,22 @@ class _MainMenuPageState extends State<MainMenuPage> {
   }
 
   BottomNavigationBarItem _buildBottomNavigationBarItem(MainMenuState state,
-      {required String icon,
+      {
       required String label,
       required int index,
-      bool isTennisCourt = false,
-        Color unselectedColor = AppColors.greyTextColor,
       double height = 45}) {
     return BottomNavigationBarItem(
         icon: Padding(
           padding: const EdgeInsets.only(top: 5.0),
           child: Column(
             children: [
-              isTennisCourt
-                  ? Image.asset(icon, color: state.tabIndex == index ? AppColors.primaryColor : unselectedColor, height: 45,)
-                  : SvgPicture.asset(
-                      icon,
-                      color: state.tabIndex == index
-                          ? AppColors.primaryColor
-                          : AppColors.greyTextColor,
+             SvgPicture.asset(
+               state.tabIndex == index?
+                      AppIcons.navIcons[index]['on']!:
+               AppIcons.navIcons[index]['off']!,
                       height: height,
                     ),
-              const SizedBox(height: 5,),
+              // const SizedBox(height: 5,),
               Text(
                 label,
                 style: TextStyle(

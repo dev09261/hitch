@@ -1,13 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hitch/src/features/paywalls/filter_subscription_paywall.dart';
+import 'package:hitch/src/helpers/ad_helper.dart';
 import 'package:hitch/src/models/event_model.dart';
 import 'package:hitch/src/models/event_request_model.dart';
 import 'package:hitch/src/providers/event_provider.dart';
+import 'package:hitch/src/providers/subscription_provider.dart';
 import 'package:hitch/src/res/app_colors.dart';
 import 'package:hitch/src/services/auth_service.dart';
 import 'package:hitch/src/utils/utils.dart';
+import 'package:hitch/src/widgets/ad_video.dart';
 import 'package:hitch/src/widgets/primary_btn.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class EventItemWidget extends StatefulWidget {
   final EventModel event;
@@ -20,8 +27,16 @@ class EventItemWidget extends StatefulWidget {
 }
 
 class _EventItemWidgetState extends State<EventItemWidget> {
-
+  final userAuthService = UserAuthService.instance;
+  InterstitialAd? _interstitialAd;
   bool loading = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,13 +135,45 @@ class _EventItemWidgetState extends State<EventItemWidget> {
                         textColor: AppColors.primaryColor,
                         bgColor: Colors.transparent,
                         isLoading: loading,
-                        onTap: () {
+                        onTap: () async {
                           if (loading) {
                             return;
                           }
                           setState(() {
                             loading = true;
                           });
+
+                          final subscriptionProvider = Provider.of<SubscriptionProvider>(context, listen:  false);
+
+                          // bool isFreeConnectsCompleted = contactedPlayersProvider.contactedPlayers.isNotEmpty;
+                          final isSubscribed = subscriptionProvider.getIsSubscribed;
+
+                          var user = await userAuthService.getCurrentUser();
+
+                          List<Placemark> placemarks = await placemarkFromCoordinates(user!.latitude!, user.longitude!);
+
+                          if(!isSubscribed){
+                            if (placemarks[0].country == 'Canada') {
+                              await Navigator.push(context, MaterialPageRoute(builder: (context) => AdVideo(user: user,)));
+                              if(!isSubscribed){
+                                int _acceptCount = await widget.eventProvider.getTotalMyEventRequestCount();
+                                if (_acceptCount >= 3) {
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+                                  return;
+                                }
+                              }
+                            } else {
+                              int _acceptCount = await widget.eventProvider.getTotalMyEventRequestCount();
+                              if (_acceptCount >= 3) {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (ctx)=>  const FilterSubscriptionPaywall()));
+                                return;
+                              }
+                              if (_interstitialAd != null) {
+                                await _interstitialAd!.show();
+                              }
+                            }
+                          }
+
                           widget.eventProvider.sendRequest(widget.event);
                         }),
                   ),
@@ -173,4 +220,28 @@ class _EventItemWidgetState extends State<EventItemWidget> {
       ),
     );
   }
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: AdHelper.interstitialAdUnitId,
+      request: const AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (ad) {
+          ad.fullScreenContentCallback = FullScreenContentCallback(
+            onAdDismissedFullScreenContent: (ad) {
+              widget.eventProvider.sendRequest(widget.event);
+            },
+          );
+
+          setState(() {
+            _interstitialAd = ad;
+          });
+        },
+        onAdFailedToLoad: (err) {
+          debugPrint('Failed to load an interstitial ad: ${err.message}');
+        },
+      ),
+    );
+  }
+
 }
