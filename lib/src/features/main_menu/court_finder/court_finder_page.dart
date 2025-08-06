@@ -63,8 +63,9 @@ class _CourtFinderPageState extends State<CourtFinderPage> {
     Size size = MediaQuery.of(context).size;
     final _subscriptionProvider = Provider.of<SubscriptionProvider>(context);
 
-    if (!_subscriptionProvider.getIsSubscribed)
-      return SubscriptionPaywall();
+    if (!_subscriptionProvider.getIsSubscribed) {
+      return const SubscriptionPaywall();
+    }
 
     return BlocConsumer<CourtsCubit, CourtsStates>(
         listener: (ctx, state){

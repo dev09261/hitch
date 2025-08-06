@@ -147,14 +147,13 @@ class _GroupChatMessagesPageState extends State<GroupChatMessagesPage> {
                       if (url == null || url.isEmpty) {
                         return;
                       }
-                      final map = await ChatService.sendMessage(roomID: widget.chat.chatID, messageText: 'Shared an Image',
+                      final map = await ChatService.sendMessageInGroup(roomID: widget.chat.chatID, messageText: 'Shared an Image',
                           type: 'image',
                           fileUrl: url
                       );
                       if(!map['status']){
                         _showErrorSnackBar(map);
                       }
-
                     },
                   ),
                   Expanded(
