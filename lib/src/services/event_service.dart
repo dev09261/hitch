@@ -231,12 +231,17 @@ query GetTournaments(
 }
 ''';
 
-    // var bounds = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 50);
+    var bounds = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 50);
 
     final Map<String, dynamic> payload = {
       "operationName": "GetTournaments",
       "variables": {
-        "bounds": null,
+        "bounds": {
+          "ne_lat": bounds.maxLat,
+          "ne_lng": bounds.maxLng,
+          "sw_lat": bounds.minLat,
+          "sw_lng": bounds.minLng,
+        },
         "keyword": null,
         "limit": limit,
         "center": {"lat": currentUser.latitude!, "lng": currentUser.longitude},
@@ -249,12 +254,12 @@ query GetTournaments(
         "myTournaments": false,
         "mtManaging": false,
         "mtPast": false,
-        "userLocationFetch": true,
+        "userLocationFetch": false,
         "userId": null,
         "startDate": null,
         "endDate": null,
         "partner": null,
-        "tournamentFilter": "local",
+        "tournamentFilter": null,
         "requesterUuid": null,
       },
       "query": getTournamentsQuery,

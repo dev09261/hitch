@@ -211,6 +211,9 @@ class _SubscriptionPaywallState extends State<SubscriptionPaywall> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(
+          width: 22,
+        ),
         Image.asset(
           AppIcons.icPickleBallMap,
           height: 20,
