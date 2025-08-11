@@ -231,7 +231,7 @@ query GetTournaments(
 }
 ''';
 
-    var bounds = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 50);
+    var bounds = Utils.calculateBoundingBox(currentUser.latitude!, currentUser.longitude!, 200);
 
     final Map<String, dynamic> payload = {
       "operationName": "GetTournaments",
@@ -314,11 +314,18 @@ query GetTournaments(
     List<String> myHitchesIds =
         await HitchesService.getAcceptedHitchesUserIds();
 
+    GeoBox box = Utils.calculateBoundingBox(
+        currentUser.latitude!, currentUser.longitude!, 200);
+
     myHitchesIds.add(currentUser.userID);
 
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection(eventsCollection)
         .where('createdByUserID', whereIn: myHitchesIds)
+        .where('latitude', isGreaterThanOrEqualTo: box.minLat)
+        .where('latitude', isLessThanOrEqualTo: box.maxLat)
+        .where('longitude', isGreaterThanOrEqualTo: box.minLng)
+        .where('longitude', isLessThanOrEqualTo: box.maxLng)
         .where('isForEveryOne', isEqualTo: false)
         .where('eventDate',
         isGreaterThan: DateTime.now()
@@ -331,8 +338,6 @@ query GetTournaments(
         .toList();
 
     if (currentUser.latitude != null) {
-      GeoBox box = Utils.calculateBoundingBox(
-          currentUser.latitude!, currentUser.longitude!, 500);
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
           .collection(eventsCollection)
           .where('latitude', isGreaterThanOrEqualTo: box.minLat)
